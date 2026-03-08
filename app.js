@@ -97,8 +97,8 @@
     if (btnAuth) {
       if (auth) {
         btnAuth.textContent = `Salir (${auth.cargo})`;
-        btnAuth.classList.remove("btn-primary");
-        btnAuth.classList.add("btn-outline-primary");
+        btnAuth.classList.remove("text-danger");
+        btnAuth.classList.add("text-primary");
 
         btnAuth.addEventListener("click", (e) => {
           e.preventDefault();
@@ -110,16 +110,25 @@
         });
       } else {
         btnAuth.textContent = "Login";
-        btnAuth.classList.add("btn-primary");
-        btnAuth.classList.remove("btn-outline-primary");
+        btnAuth.classList.add("text-danger");
+        btnAuth.classList.remove("text-primary");
       }
     }
 
-    // Proteger acceso a "Listar pedidos" (pantalla 6) si no hay login
+    // Proteger acceso a "Listar pedidos" (pantalla 6) y manejar visibilidad
     if (btnListar) {
+      const a = getAuth();
+      if (!a) {
+        // Ocultar si no hay sesión
+        btnListar.parentElement.classList.add("d-none");
+      } else {
+        // Mostrar si hay sesión
+        btnListar.parentElement.classList.remove("d-none");
+      }
+
       btnListar.addEventListener("click", (e) => {
-        const a = getAuth();
-        if (!a) {
+        const authNow = getAuth();
+        if (!authNow) {
           e.preventDefault();
           window.location.href =
             "login.html?msg=" +
