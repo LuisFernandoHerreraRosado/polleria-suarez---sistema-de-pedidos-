@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nuevo Pedido | Pollos a la Brasa Suárez</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body data-page="new-order" class="bg-warning d-flex flex-column min-vh-100">
+    <!-- HEADER -->
+    <nav class="navbar navbar-expand-lg bg-danger border-bottom">
+      <div class="container py-2">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2"
+          href="new-order.html"
+        >
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThETf6jmAo6y9a1doPDnNOWCVarSMEkiyIBA&s"
+            alt="Logo"
+            width="42"
+            height="42"
+            class="rounded-circle"
+          />
+          <span class="fw-semibold">Pollos a la Brasa Suárez</span>
+        </a>
+
+        <div class="ms-auto d-flex gap-2">
+          <a
+            class="btn btn-outline-secondary"
+            href="admin-pedidos.html"
+            id="btnListar"
+            >Listar pedidos</a
+          >
+          <a class="btn btn-primary" href="login.html" id="btnAuth">Login</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container my-4 flex-grow-1">
+      <!-- Mensajes del proyecto (app.js usa este) -->
+      <div id="alertBox"></div>
+
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"
+      >
+        <h1 class="h4 m-0">Pide tu orden</h1>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-dark btn-sm" href="stock.html"
+            >Control de stock</a
+          >
+        </div>
+      </div>
+
+      <!-- Mensajes SOLO de agregar/eliminar items -->
+      <div id="cartAlert"></div>
+
+      <form id="orderForm">
+        <!-- ======= SECCIÓN: AGREGAR PRODUCTOS ======= -->
+        <div class="row g-3">
+          <!-- Agregar Pollo -->
+          <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h2 class="h6 mb-3">Agregar Pollo</h2>
+
+                <label class="form-label">Porción</label>
+                <select id="polloPortion" class="form-select mb-2">
+                  <option value="1_4">1/4</option>
+                  <option value="1_2">1/2</option>
+                  <option value="1">1 Pollo</option>
+                </select>
+
+                <label class="form-label">Cantidad</label>
+                <input
+                  type="number"
+                  min="1"
+                  value="1"
+                  id="polloQty"
+                  class="form-control mb-3"
+                />
+
+                <button
+                  type="button"
+                  class="btn btn-primary w-100"
+                  id="addPollo"
+                >
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agregar Mostrito -->
+          <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h2 class="h6 mb-3">Agregar Mostrito</h2>
+
+                <label class="form-label">Porción</label>
+                <select id="mostritoPortion" class="form-select mb-2">
+                  <option value="1_4">1/4</option>
+                  <option value="1_2">1/2</option>
+                  <option value="1">1 Pollo</option>
+                </select>
+
+                <label class="form-label">Cantidad</label>
+                <input
+                  type="number"
+                  min="1"
+                  value="1"
+                  id="mostritoQty"
+                  class="form-control mb-3"
+                />
+
+                <button
+                  type="button"
+                  class="btn btn-primary w-100"
+                  id="addMostrito"
+                >
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agregar Gaseosa -->
+          <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h2 class="h6 mb-3">Agregar Gaseosa</h2>
+
+                <label class="form-label">Marca</label>
+                <select id="sodaBrand" class="form-select mb-2">
+                  <option value="" selected disabled>Selecciona...</option>
+                  <option value="Coca Cola">Coca Cola</option>
+                  <option value="Inka Kola">Inka Kola</option>
+                  <option value="Fanta">Fanta</option>
+                  <option value="Sprite">Sprite</option>
+                  <option value="Cola Escocesa">Cola Escocesa</option>
+                </select>
+
+                <label class="form-label">Tamaño</label>
+                <select id="sodaSize" class="form-select mb-2">
+                  <option value="" selected disabled>Selecciona...</option>
+                  <option value="0.5L">½ litro</option>
+                  <option value="1L">1 litro</option>
+                  <option value="1.5L">1.5 litros</option>
+                  <option value="2.25L">2.25 litros</option>
+                </select>
+
+                <label class="form-label">Cantidad</label>
+                <input
+                  type="number"
+                  min="1"
+                  value="1"
+                  id="sodaQty"
+                  class="form-control mb-3"
+                />
+
+                <button
+                  type="button"
+                  class="btn btn-primary w-100"
+                  id="addSoda"
+                >
+                  Agregar
+                </button>
+
+                <p class="text-muted small mt-2 mb-0">
+                  Nota: solo 1 tamaño por marca (si quieres otro tamaño, elimina
+                  y vuelve a agregar).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======= SECCIÓN: LISTADO EN UL/LI (como pediste) ======= -->
+        <div class="card shadow-sm mt-3">
+          <div class="card-body">
+            <div
+              class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2"
+            >
+              <h2 class="h6 m-0">Tu pedido (items agregados)</h2>
+              <span class="text-muted small"
+                >Aquí puedes eliminar lo que ya no quieras.</span
+              >
+            </div>
+
+            <!-- ✅ LISTA -->
+            <ul class="list-group" id="cartList">
+              <li
+                class="list-group-item text-center text-muted py-4"
+                id="cartEmptyLi"
+              >
+                Aún no agregaste productos.
+              </li>
+            </ul>
+
+            <div class="d-grid d-md-flex justify-content-md-end mt-3">
+              <button type="submit" class="btn btn-success btn-lg">
+                Hacer pedido
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======= CAMPOS OCULTOS (para que app.js funcione igual) ======= -->
+        <!-- Pollo -->
+        <input type="hidden" id="pollo_1_4" value="0" />
+        <input type="hidden" id="pollo_1_2" value="0" />
+        <input type="hidden" id="pollo_1" value="0" />
+
+        <!-- Mostrito -->
+        <input type="hidden" id="mostrito_1_4" value="0" />
+        <input type="hidden" id="mostrito_1_2" value="0" />
+        <input type="hidden" id="mostrito_1" value="0" />
+
+        <!-- Gaseosas -->
+        <input type="hidden" id="g_coca_cola_size" value="" />
+        <input type="hidden" id="g_coca_cola_qty" value="0" />
+
+        <input type="hidden" id="g_inka_kola_size" value="" />
+        <input type="hidden" id="g_inka_kola_qty" value="0" />
+
+        <input type="hidden" id="g_fanta_size" value="" />
+        <input type="hidden" id="g_fanta_qty" value="0" />
+
+        <input type="hidden" id="g_sprite_size" value="" />
+        <input type="hidden" id="g_sprite_qty" value="0" />
+
+        <input type="hidden" id="g_cola_escocesa_size" value="" />
+        <input type="hidden" id="g_cola_escocesa_qty" value="0" />
+      </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-top mt-auto">
+      <div class="container py-3 text-center small">
+        todos los derechos reservados : Luis Herrera 2026
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- app.js del proyecto (NO se toca) -->
+    <script src="app.js" defer></script>
+
+    <!-- Script SOLO para esta pantalla -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const cartAlert = document.getElementById("cartAlert");
+
+        const cartList = document.getElementById("cartList");
+        const cartEmptyLi = document.getElementById("cartEmptyLi");
+
+        const polloPortion = document.getElementById("polloPortion");
+        const polloQty = document.getElementById("polloQty");
+        const addPollo = document.getElementById("addPollo");
+
+        const mostritoPortion = document.getElementById("mostritoPortion");
+        const mostritoQty = document.getElementById("mostritoQty");
+        const addMostrito = document.getElementById("addMostrito");
+
+        const sodaBrand = document.getElementById("sodaBrand");
+        const sodaSize = document.getElementById("sodaSize");
+        const sodaQty = document.getElementById("sodaQty");
+        const addSoda = document.getElementById("addSoda");
+
+        const cart = new Map();
+        const SODAS = [
+          "Coca Cola",
+          "Inka Kola",
+          "Fanta",
+          "Sprite",
+          "Cola Escocesa",
+        ];
+
+        function slugifyBrand(brand) {
+          return brand.toLowerCase().replaceAll(" ", "_");
+        }
+
+        function portionLabel(portion) {
+          if (portion === "1_4") return "1/4";
+          if (portion === "1_2") return "1/2";
+          return "1";
+        }
+
+        function showCartMsg(message, type = "info") {
+          if (!cartAlert) return;
+          const safeType = ["success", "warning", "danger", "info"].includes(
+            type,
+          )
+            ? type
+            : "info";
+          cartAlert.innerHTML = `
+          <div class="alert alert-${safeType} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        `;
+        }
+
+        function syncHidden() {
+          // Reset pollo/mostrito
+          document.getElementById("pollo_1_4").value = 0;
+          document.getElementById("pollo_1_2").value = 0;
+          document.getElementById("pollo_1").value = 0;
+
+          document.getElementById("mostrito_1_4").value = 0;
+          document.getElementById("mostrito_1_2").value = 0;
+          document.getElementById("mostrito_1").value = 0;
+
+          // Reset gaseosas
+          for (const brand of SODAS) {
+            const slug = slugifyBrand(brand);
+            document.getElementById(`g_${slug}_qty`).value = 0;
+            document.getElementById(`g_${slug}_size`).value = "";
+          }
+
+          // Cargar desde cart
+          for (const [, item] of cart.entries()) {
+            if (item.type === "pollo") {
+              document.getElementById(`pollo_${item.portion}`).value = item.qty;
+            }
+            if (item.type === "mostrito") {
+              document.getElementById(`mostrito_${item.portion}`).value =
+                item.qty;
+            }
+            if (item.type === "gaseosa") {
+              document.getElementById(`g_${item.slug}_qty`).value = item.qty;
+              document.getElementById(`g_${item.slug}_size`).value = item.size;
+            }
+          }
+        }
+
+        function clearRenderedItems() {
+          cartList
+            .querySelectorAll("li[data-key]")
+            .forEach((li) => li.remove());
+        }
+
+        function renderCart() {
+          clearRenderedItems();
+
+          if (cart.size === 0) {
+            cartEmptyLi.style.display = "";
+            return;
+          }
+          cartEmptyLi.style.display = "none";
+
+          for (const [key, item] of cart.entries()) {
+            const li = document.createElement("li");
+            li.className =
+              "list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2";
+            li.setAttribute("data-key", key);
+
+            let title = "";
+            let detail = "";
+            if (item.type === "pollo") {
+              title = "Pollo";
+              detail = portionLabel(item.portion);
+            } else if (item.type === "mostrito") {
+              title = "Mostrito";
+              detail = portionLabel(item.portion);
+            } else {
+              title = "Gaseosa";
+              detail = `${item.brand} (${item.size})`;
+            }
+
+            li.innerHTML = `
+            <div class="me-auto">
+              <div class="fw-semibold">${title}</div>
+              <div class="text-muted small">${detail}</div>
+            </div>
+
+            <span class="badge text-bg-secondary rounded-pill">x ${item.qty}</span>
+
+            <button type="button" class="btn btn-outline-danger btn-sm ms-md-2" data-action="remove" data-key="${key}">
+              Eliminar
+            </button>
+          `;
+
+            cartList.appendChild(li);
+          }
+        }
+
+        function addOrUpdateItem(itemKey, itemData) {
+          const existing = cart.get(itemKey);
+
+          if (!existing) {
+            cart.set(itemKey, itemData);
+          } else {
+            // gaseosa: si cambia size, no permitir
+            if (
+              existing.type === "gaseosa" &&
+              existing.size !== itemData.size
+            ) {
+              showCartMsg(
+                `Ya agregaste <b>${existing.brand}</b> con tamaño <b>${existing.size}</b>. Elimina ese item para agregar otro tamaño.`,
+                "warning",
+              );
+              return;
+            }
+            existing.qty += itemData.qty;
+            cart.set(itemKey, existing);
+          }
+
+          syncHidden();
+          renderCart();
+          showCartMsg("Producto agregado ✅", "success");
+        }
+
+        // Agregar Pollo
+        addPollo.addEventListener("click", () => {
+          const portion = polloPortion.value;
+          const qty = Number(polloQty.value || 0);
+          if (qty <= 0)
+            return showCartMsg("La cantidad debe ser mayor a 0.", "danger");
+
+          const key = `pollo|${portion}`;
+          addOrUpdateItem(key, { type: "pollo", portion, qty });
+        });
+
+        // Agregar Mostrito
+        addMostrito.addEventListener("click", () => {
+          const portion = mostritoPortion.value;
+          const qty = Number(mostritoQty.value || 0);
+          if (qty <= 0)
+            return showCartMsg("La cantidad debe ser mayor a 0.", "danger");
+
+          const key = `mostrito|${portion}`;
+          addOrUpdateItem(key, { type: "mostrito", portion, qty });
+        });
+
+        // Agregar Gaseosa
+        addSoda.addEventListener("click", () => {
+          const brand = sodaBrand.value;
+          const size = sodaSize.value;
+          const qty = Number(sodaQty.value || 0);
+
+          if (!brand)
+            return showCartMsg("Selecciona una marca de gaseosa.", "danger");
+          if (!size) return showCartMsg("Selecciona un tamaño.", "danger");
+          if (qty <= 0)
+            return showCartMsg("La cantidad debe ser mayor a 0.", "danger");
+
+          const slug = slugifyBrand(brand);
+          const key = `gaseosa|${slug}`;
+          addOrUpdateItem(key, { type: "gaseosa", brand, slug, size, qty });
+        });
+
+        // Eliminar
+        cartList.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-action='remove']");
+          if (!btn) return;
+
+          const key = btn.getAttribute("data-key");
+          cart.delete(key);
+
+          syncHidden();
+          renderCart();
+          showCartMsg("Producto eliminado 🗑️", "info");
+        });
+
+        // Inicial
+        syncHidden();
+        renderCart();
+      });
+    </script>
+  </body>
+</html>
