@@ -93,6 +93,17 @@
     const auth = getAuth();
     const btnAuth = document.getElementById("btnAuth");
     const btnListar = document.getElementById("btnListar");
+    const btnStock = document.getElementById("btnStock");
+
+    // Mostrar/ocultar botones administrativos según el rol
+    const isAdminOrCook = auth && ["administrador", "cocinero"].includes(auth.cargo);
+
+    if (btnListar) {
+      btnListar.style.display = isAdminOrCook ? "" : "none";
+    }
+    if (btnStock) {
+      btnStock.style.display = isAdminOrCook ? "" : "none";
+    }
 
     if (btnAuth) {
       if (auth) {
@@ -140,7 +151,7 @@
       window.location.href =
         "login.html?msg=" +
         encodeURIComponent(
-          "Acceso restringido. Inicia sesión como administrador o cocinero.",
+          "Acceso restringido. No tienes permisos para ver esta página.",
         ) +
         "&type=danger&next=" +
         next;
@@ -451,6 +462,15 @@
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
+      // Verificar login antes de proceder
+      const auth = getAuth();
+      if (!auth) {
+        window.location.href = "login.html?msg=" +
+          encodeURIComponent("Debes iniciar sesión para realizar un pedido.") +
+          "&type=warning&next=new-order.html";
+        return;
+      }
+
       const alertBox = $("#alertBox");
       const fail = (m) => {
         if (alertBox)
@@ -470,6 +490,15 @@
   function pageOrderSummary() {
     updateHeaderAuthUI();
     showAlert("alertBox");
+
+    // Verificar login
+    const auth = getAuth();
+    if (!auth) {
+      window.location.href = "login.html?msg=" +
+        encodeURIComponent("Debes iniciar sesión para ver el resumen del pedido.") +
+        "&type=warning&next=order-summary.html";
+      return;
+    }
 
     const order = getCurrentOrder();
     const alertBox = $("#alertBox");
