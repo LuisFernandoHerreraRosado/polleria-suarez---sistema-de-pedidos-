@@ -231,6 +231,39 @@
   }
 
   function buildOrderFromForm() {
+    const cartJsonEl = $("#cart_json");
+    if (cartJsonEl) {
+      const cart = safeParse(cartJsonEl.value, []);
+
+      const pollo = { q1_4: 0, q1_2: 0, q1: 0 };
+      const mostrito = { q1_4: 0, q1_2: 0, q1: 0 };
+      const gaseosas = [];
+
+      for (const item of cart) {
+        if (item.type === "pollo") {
+          pollo[`q${item.portion}`] = item.qty;
+        } else if (item.type === "mostrito") {
+          mostrito[`q${item.portion}`] = item.qty;
+        } else if (item.type === "gaseosa") {
+          gaseosas.push({ brand: item.brand, size: item.size, qty: item.qty });
+        }
+      }
+
+      if (cart.length === 0) {
+        throw new Error(
+          "Agrega al menos un producto (pollo, mostrito o gaseosa).",
+        );
+      }
+
+      return {
+        id: makeOrderId(),
+        createdAt: new Date().toISOString(),
+        items: { pollo, mostrito, gaseosas },
+        paymentMethod: null,
+        status: { paid: false, cooked: false },
+      };
+    }
+
     // Pollo
     const pollo = {
       q1_4: Number($("#pollo_1_4")?.value || 0),

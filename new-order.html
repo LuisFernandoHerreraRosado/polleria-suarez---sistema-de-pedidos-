@@ -8,11 +8,15 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
   </head>
 
-  <body data-page="new-order" class="bg-warning d-flex flex-column min-vh-100">
+  <body data-page="new-order" class="bg-warning-subtle d-flex flex-column min-vh-100">
     <!-- HEADER -->
-    <nav class="navbar navbar-expand-lg bg-danger border-bottom">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient border-bottom shadow-sm">
       <div class="container py-2">
         <a
           class="navbar-brand d-flex align-items-center gap-2"
@@ -25,17 +29,17 @@
             height="42"
             class="rounded-circle"
           />
-          <span class="fw-semibold">Pollos a la Brasa Suárez</span>
+          <span class="fw-bold">Pollos a la Brasa Suárez</span>
         </a>
 
         <div class="ms-auto d-flex gap-2">
           <a
-            class="btn btn-outline-secondary"
+            class="btn btn-light"
             href="admin-pedidos.html"
             id="btnListar"
-            >Listar pedidos</a
+            ><i class="bi bi-list-ul me-1"></i> Listar pedidos</a
           >
-          <a class="btn btn-primary" href="login.html" id="btnAuth">Login</a>
+          <a class="btn btn-primary shadow-sm" href="login.html" id="btnAuth"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
         </div>
       </div>
     </nav>
@@ -49,8 +53,8 @@
       >
         <h1 class="h4 m-0">Pide tu orden</h1>
         <div class="d-flex gap-2">
-          <a class="btn btn-outline-dark btn-sm" href="stock.html"
-            >Control de stock</a
+          <a class="btn btn-outline-dark btn-sm shadow-sm" href="stock.html"
+            ><i class="bi bi-box-seam me-1"></i> Control de stock</a
           >
         </div>
       </div>
@@ -63,9 +67,9 @@
         <div class="row g-3">
           <!-- Agregar Pollo -->
           <div class="col-12 col-lg-4">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 border-0">
               <div class="card-body">
-                <h2 class="h6 mb-3">Agregar Pollo</h2>
+                <h2 class="h6 mb-3"><i class="bi bi-egg-fried text-danger me-1"></i> Agregar Pollo</h2>
 
                 <label class="form-label">Porción</label>
                 <select id="polloPortion" class="form-select mb-2">
@@ -85,10 +89,10 @@
 
                 <button
                   type="button"
-                  class="btn btn-primary w-100"
+                  class="btn btn-primary w-100 shadow-sm"
                   id="addPollo"
                 >
-                  Agregar
+                  <i class="bi bi-plus-circle me-1"></i> Agregar
                 </button>
               </div>
             </div>
@@ -96,9 +100,9 @@
 
           <!-- Agregar Mostrito -->
           <div class="col-12 col-lg-4">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 border-0">
               <div class="card-body">
-                <h2 class="h6 mb-3">Agregar Mostrito</h2>
+                <h2 class="h6 mb-3"><i class="bi bi-fire text-danger me-1"></i> Agregar Mostrito</h2>
 
                 <label class="form-label">Porción</label>
                 <select id="mostritoPortion" class="form-select mb-2">
@@ -118,10 +122,10 @@
 
                 <button
                   type="button"
-                  class="btn btn-primary w-100"
+                  class="btn btn-primary w-100 shadow-sm"
                   id="addMostrito"
                 >
-                  Agregar
+                  <i class="bi bi-plus-circle me-1"></i> Agregar
                 </button>
               </div>
             </div>
@@ -129,9 +133,9 @@
 
           <!-- Agregar Gaseosa -->
           <div class="col-12 col-lg-4">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 border-0">
               <div class="card-body">
-                <h2 class="h6 mb-3">Agregar Gaseosa</h2>
+                <h2 class="h6 mb-3"><i class="bi bi-cup-straw text-danger me-1"></i> Agregar Gaseosa</h2>
 
                 <label class="form-label">Marca</label>
                 <select id="sodaBrand" class="form-select mb-2">
@@ -163,15 +167,14 @@
 
                 <button
                   type="button"
-                  class="btn btn-primary w-100"
+                  class="btn btn-primary w-100 shadow-sm"
                   id="addSoda"
                 >
-                  Agregar
+                  <i class="bi bi-plus-circle me-1"></i> Agregar
                 </button>
 
                 <p class="text-muted small mt-2 mb-0">
-                  Nota: solo 1 tamaño por marca (si quieres otro tamaño, elimina
-                  y vuelve a agregar).
+                  Puedes agregar múltiples tamaños por marca.
                 </p>
               </div>
             </div>
@@ -201,46 +204,23 @@
             </ul>
 
             <div class="d-grid d-md-flex justify-content-md-end mt-3">
-              <button type="submit" class="btn btn-success btn-lg">
-                Hacer pedido
+              <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                <i class="bi bi-cart-check me-1"></i> Hacer pedido
               </button>
             </div>
           </div>
         </div>
 
-        <!-- ======= CAMPOS OCULTOS (para que app.js funcione igual) ======= -->
-        <!-- Pollo -->
-        <input type="hidden" id="pollo_1_4" value="0" />
-        <input type="hidden" id="pollo_1_2" value="0" />
-        <input type="hidden" id="pollo_1" value="0" />
-
-        <!-- Mostrito -->
-        <input type="hidden" id="mostrito_1_4" value="0" />
-        <input type="hidden" id="mostrito_1_2" value="0" />
-        <input type="hidden" id="mostrito_1" value="0" />
-
-        <!-- Gaseosas -->
-        <input type="hidden" id="g_coca_cola_size" value="" />
-        <input type="hidden" id="g_coca_cola_qty" value="0" />
-
-        <input type="hidden" id="g_inka_kola_size" value="" />
-        <input type="hidden" id="g_inka_kola_qty" value="0" />
-
-        <input type="hidden" id="g_fanta_size" value="" />
-        <input type="hidden" id="g_fanta_qty" value="0" />
-
-        <input type="hidden" id="g_sprite_size" value="" />
-        <input type="hidden" id="g_sprite_qty" value="0" />
-
-        <input type="hidden" id="g_cola_escocesa_size" value="" />
-        <input type="hidden" id="g_cola_escocesa_qty" value="0" />
+        <!-- ======= CAMPO OCULTO PARA EL CARRITO ======= -->
+        <input type="hidden" id="cart_json" name="cart_json" value="[]" />
       </form>
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white border-top mt-auto">
-      <div class="container py-3 text-center small">
-        todos los derechos reservados : Luis Herrera 2026
+    <footer class="bg-dark text-white-50 py-4 mt-auto">
+      <div class="container text-center">
+        <p class="mb-1">Pollos a la Brasa Suárez &copy; 2026</p>
+        <small>Todos los derechos reservados : Luis Herrera</small>
       </div>
     </footer>
 
@@ -305,36 +285,8 @@
         }
 
         function syncHidden() {
-          // Reset pollo/mostrito
-          document.getElementById("pollo_1_4").value = 0;
-          document.getElementById("pollo_1_2").value = 0;
-          document.getElementById("pollo_1").value = 0;
-
-          document.getElementById("mostrito_1_4").value = 0;
-          document.getElementById("mostrito_1_2").value = 0;
-          document.getElementById("mostrito_1").value = 0;
-
-          // Reset gaseosas
-          for (const brand of SODAS) {
-            const slug = slugifyBrand(brand);
-            document.getElementById(`g_${slug}_qty`).value = 0;
-            document.getElementById(`g_${slug}_size`).value = "";
-          }
-
-          // Cargar desde cart
-          for (const [, item] of cart.entries()) {
-            if (item.type === "pollo") {
-              document.getElementById(`pollo_${item.portion}`).value = item.qty;
-            }
-            if (item.type === "mostrito") {
-              document.getElementById(`mostrito_${item.portion}`).value =
-                item.qty;
-            }
-            if (item.type === "gaseosa") {
-              document.getElementById(`g_${item.slug}_qty`).value = item.qty;
-              document.getElementById(`g_${item.slug}_size`).value = item.size;
-            }
-          }
+          const cartArray = Array.from(cart.values());
+          document.getElementById("cart_json").value = JSON.stringify(cartArray);
         }
 
         function clearRenderedItems() {
@@ -394,17 +346,6 @@
           if (!existing) {
             cart.set(itemKey, itemData);
           } else {
-            // gaseosa: si cambia size, no permitir
-            if (
-              existing.type === "gaseosa" &&
-              existing.size !== itemData.size
-            ) {
-              showCartMsg(
-                `Ya agregaste <b>${existing.brand}</b> con tamaño <b>${existing.size}</b>. Elimina ese item para agregar otro tamaño.`,
-                "warning",
-              );
-              return;
-            }
             existing.qty += itemData.qty;
             cart.set(itemKey, existing);
           }
@@ -449,7 +390,7 @@
             return showCartMsg("La cantidad debe ser mayor a 0.", "danger");
 
           const slug = slugifyBrand(brand);
-          const key = `gaseosa|${slug}`;
+          const key = `gaseosa|${slug}|${size}`;
           addOrUpdateItem(key, { type: "gaseosa", brand, slug, size, qty });
         });
 
