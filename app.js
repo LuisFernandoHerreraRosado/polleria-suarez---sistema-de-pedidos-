@@ -73,7 +73,7 @@
       ? type
       : "info";
     box.innerHTML = `
-      <div class="alert alert-${safeType} alert-dismissible fade show" role="alert">
+      <div class="alert alert-${safeType} alert-dismissible fade show shadow-sm" role="alert">
         ${escapeHtml(msg)}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
@@ -107,9 +107,9 @@
 
     if (btnAuth) {
       if (auth) {
-        btnAuth.textContent = `Salir (${auth.cargo})`;
-        btnAuth.classList.remove("btn-primary");
-        btnAuth.classList.add("btn-outline-primary");
+        btnAuth.innerHTML = `<i class="bi bi-box-arrow-right me-1"></i> Salir (${auth.cargo})`;
+        btnAuth.classList.remove("text-danger");
+        btnAuth.classList.add("text-primary");
 
         btnAuth.addEventListener("click", (e) => {
           e.preventDefault();
@@ -120,17 +120,26 @@
             "&type=info";
         });
       } else {
-        btnAuth.textContent = "Login";
-        btnAuth.classList.add("btn-primary");
-        btnAuth.classList.remove("btn-outline-primary");
+        btnAuth.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Login`;
+        btnAuth.classList.add("text-danger");
+        btnAuth.classList.remove("text-primary");
       }
     }
 
-    // Proteger acceso a "Listar pedidos" (pantalla 6) si no hay login
+    // Proteger acceso a "Listar pedidos" (pantalla 6) y manejar visibilidad
     if (btnListar) {
+      const a = getAuth();
+      if (!a) {
+        // Ocultar si no hay sesión
+        btnListar.parentElement.classList.add("d-none");
+      } else {
+        // Mostrar si hay sesión
+        btnListar.parentElement.classList.remove("d-none");
+      }
+
       btnListar.addEventListener("click", (e) => {
-        const a = getAuth();
-        if (!a) {
+        const authNow = getAuth();
+        if (!authNow) {
           e.preventDefault();
           window.location.href =
             "login.html?msg=" +
@@ -275,7 +284,11 @@
       };
     }
 
+<<<<<<< HEAD
     // Pollo
+=======
+    // Fallback Pollo
+>>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
     const pollo = {
       q1_4: Number($("#pollo_1_4")?.value || 0),
       q1_2: Number($("#pollo_1_2")?.value || 0),
@@ -387,7 +400,7 @@
       if (!found) {
         if (alertBox) {
           alertBox.innerHTML = `
-            <div class="alert alert-danger">Correo o contraseña incorrectos.</div>
+            <div class="alert alert-danger shadow-sm">Correo o contraseña incorrectos.</div>
           `;
         }
         return;
@@ -429,7 +442,7 @@
       const alertBox = $("#alertBox");
       const fail = (m) => {
         if (alertBox)
-          alertBox.innerHTML = `<div class="alert alert-danger">${escapeHtml(m)}</div>`;
+          alertBox.innerHTML = `<div class="alert alert-danger shadow-sm">${escapeHtml(m)}</div>`;
       };
 
       if (!nombre || !apellidos || !email || !password || !confirm || !cargo)
@@ -474,7 +487,7 @@
       const alertBox = $("#alertBox");
       const fail = (m) => {
         if (alertBox)
-          alertBox.innerHTML = `<div class="alert alert-danger">${escapeHtml(m)}</div>`;
+          alertBox.innerHTML = `<div class="alert alert-danger shadow-sm">${escapeHtml(m)}</div>`;
       };
 
       try {
@@ -504,7 +517,7 @@
     const alertBox = $("#alertBox");
     if (!order) {
       if (alertBox)
-        alertBox.innerHTML = `<div class="alert alert-warning">No hay un pedido actual. Crea uno primero.</div>`;
+        alertBox.innerHTML = `<div class="alert alert-warning shadow-sm">No hay un pedido actual. Crea uno primero.</div>`;
       const btns = $("#actionsBox");
       if (btns)
         btns.innerHTML = `<a class="btn btn-primary" href="new-order.html">Ir a Nuevo Pedido</a>`;
@@ -520,7 +533,7 @@
       const method = $("#paymentMethod")?.value || "";
       if (!method) {
         if (alertBox)
-          alertBox.innerHTML = `<div class="alert alert-danger">Selecciona un método de pago.</div>`;
+          alertBox.innerHTML = `<div class="alert alert-danger shadow-sm">Selecciona un método de pago.</div>`;
         return;
       }
 
@@ -558,27 +571,27 @@
     const chickensBox = $("#chickensBox");
     if (chickensBox) {
       chickensBox.innerHTML = `
-        <div class="card">
+        <div class="card shadow-sm border-0">
           <div class="card-body">
-            <h5 class="card-title mb-3">Stock de Pollos (Diario)</h5>
+            <h5 class="card-title mb-3"><i class="bi bi-egg-fried text-danger me-2"></i>Stock de Pollos (Diario)</h5>
             <div class="row g-3">
               <div class="col-12 col-md-4">
-                <div class="p-3 border rounded">
+                <div class="p-3 border rounded bg-light">
                   <div class="text-muted small">Stock inicial</div>
                   <div class="fs-4 fw-semibold">${stock.chickens.initial}</div>
                 </div>
               </div>
               <div class="col-12 col-md-4">
-                <div class="p-3 border rounded">
+                <div class="p-3 border rounded bg-light">
                   <div class="text-muted small">Consumido (pollos equivalentes)</div>
-                  <div class="fs-4 fw-semibold">${stock.chickens.consumed.toFixed(2)}</div>
+                  <div class="fs-4 fw-semibold text-danger">${stock.chickens.consumed.toFixed(2)}</div>
                   <div class="text-muted small">(${stock.chickens.consumedQuarters.toFixed(0)} cuartos)</div>
                 </div>
               </div>
               <div class="col-12 col-md-4">
-                <div class="p-3 border rounded">
+                <div class="p-3 border rounded bg-light">
                   <div class="text-muted small">Disponible</div>
-                  <div class="fs-4 fw-semibold">${stock.chickens.remaining.toFixed(2)}</div>
+                  <div class="fs-4 fw-semibold text-success">${stock.chickens.remaining.toFixed(2)}</div>
                   <div class="text-muted small">(${stock.chickens.remainingQuarters.toFixed(0)} cuartos)</div>
                 </div>
               </div>
@@ -605,7 +618,9 @@
           const cols = sizes
             .map((size) => {
               const key = `${brand}|${size}`;
-              return `<td class="text-center">${stock.sodas.remaining[key]}</td>`;
+              const val = stock.sodas.remaining[key];
+              const color = val < 5 ? "text-danger fw-bold" : "text-dark";
+              return `<td class="text-center ${color}">${val}</td>`;
             })
             .join("");
           return `<tr>
@@ -616,9 +631,9 @@
         .join("");
 
       sodasBox.innerHTML = `
-        <div class="card">
+        <div class="card shadow-sm border-0">
           <div class="card-body">
-            <h5 class="card-title mb-2">Stock de Gaseosas (Diario)</h5>
+            <h5 class="card-title mb-2"><i class="bi bi-cup-straw text-danger me-2"></i>Stock de Gaseosas (Diario)</h5>
             <div class="text-muted small mb-3">Stock inicial: ${stock.sodas.initialPerBrandSize} por tamaño y por gaseosa</div>
             <div class="table-responsive">
               <table class="table table-bordered align-middle">
@@ -657,7 +672,7 @@
     if (!wrap) return;
 
     if (!orders.length) {
-      wrap.innerHTML = `<div class="alert alert-info">Aún no hay pedidos pagados.</div>`;
+      wrap.innerHTML = `<div class="alert alert-info shadow-sm">Aún no hay pedidos pagados.</div>`;
       return;
     }
 
@@ -691,21 +706,21 @@
 
         const cooked = !!order.status?.cooked;
         const badge = cooked
-          ? `<span class="badge text-bg-success">Cocinado</span>`
-          : `<span class="badge text-bg-warning">Pendiente</span>`;
+          ? `<span class="badge text-bg-success shadow-sm">Cocinado</span>`
+          : `<span class="badge text-bg-warning shadow-sm">Pendiente</span>`;
 
         const pay = order.paymentMethod ? escapeHtml(order.paymentMethod) : "—";
 
         return `
-        <div class="card mb-3">
+        <div class="card mb-3 shadow-sm border-0">
           <div class="card-body">
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
               <div>
-                <h6 class="mb-1">Pedido ${escapeHtml(order.id)} ${badge}</h6>
+                <h6 class="mb-1"><i class="bi bi-receipt me-1"></i>Pedido ${escapeHtml(order.id)} ${badge}</h6>
                 <div class="text-muted small">Pago: <b>${pay}</b> | ${new Date(order.createdAt).toLocaleString()}</div>
               </div>
-              <button class="btn btn-sm ${cooked ? "btn-outline-success" : "btn-success"}" data-action="toggleCooked" data-id="${escapeHtml(order.id)}">
-                ${cooked ? "Quitar check" : "Marcar cocinado ✓"}
+              <button class="btn btn-sm shadow-sm ${cooked ? "btn-outline-success" : "btn-success"}" data-action="toggleCooked" data-id="${escapeHtml(order.id)}">
+                ${cooked ? '<i class="bi bi-arrow-counterclockwise"></i> Quitar check' : '<i class="bi bi-check-lg"></i> Marcar cocinado ✓'}
               </button>
             </div>
 
