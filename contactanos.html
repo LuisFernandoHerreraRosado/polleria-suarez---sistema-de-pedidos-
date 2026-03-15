@@ -12,17 +12,16 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+    <style>
+      .map-embed {
+        width: 100%;
+        height: 300px;
+        border: 0;
+      }
+    </style>
   </head>
 
-<<<<<<< HEAD
-  <body
-    data-page="contact"
-    class="bg-warning-subtle d-flex flex-column min-vh-100"
-  >
-=======
   <body data-page="contact" class="bg-warning-subtle d-flex flex-column min-vh-100">
-        <!-- HEADER -->
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
     <!-- HEADER -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient border-bottom shadow-sm">
       <div class="container py-2">
@@ -40,19 +39,6 @@
           <span class="fw-bold text-uppercase tracking-wider">Pollos a la Brasa Suárez</span>
         </a>
 
-<<<<<<< HEAD
-        <div class="ms-auto d-flex gap-2">
-          <a
-            class="btn btn-outline-secondary"
-            href="admin-pedidos.html"
-            id="btnListar"
-            >Listar pedidos</a
-          >
-          <a class="btn btn-outline-secondary" href="contactanos.html"
-            >Contáctanos</a
-          >
-          <a class="btn btn-primary" href="login.html" id="btnAuth">Login</a>
-=======
         <button
           class="navbar-toggler"
           type="button"
@@ -63,6 +49,25 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto gap-lg-2 ms-lg-4">
+            <li class="nav-item">
+              <a class="nav-link text-white px-2" href="#" data-city="arequipa">Arequipa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white px-2" href="#" data-city="lima">Lima</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white px-2" href="#" data-city="cusco">Cusco</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white px-2" href="#" data-city="puno">Puno</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white px-2" href="#" data-city="puerto"
+                >Puerto Maldonado</a
+              >
+            </li>
+          </ul>
           <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-2 mt-lg-0">
             <li class="nav-item">
               <a
@@ -81,7 +86,6 @@
               <a class="btn btn-light btn-sm w-100 text-danger fw-bold" href="login.html" id="btnAuth"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
             </li>
           </ul>
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
         </div>
       </div>
     </nav>
@@ -139,14 +143,283 @@
             </div>
 
             <div class="col-12 col-md-7">
-              <div class="ratio ratio-16x9 shadow-sm rounded overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3939.4131746691005!2d-78.54649852409592!3d-9.117101494293756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91ab8415677e5607%3A0x811e3b0fea3a2456!2sPollos%20a%20la%20Brasa%20Su%C3%A1rez!5e0!3m2!1ses-419!2spe!4v1772989628094!5m2!1ses-419!2spe"
-                  style="border: 0"
-                  allowfullscreen=""
-                  loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"
-                ></iframe>
+              <!-- PILLS -->
+              <ul
+                class="nav nav-pills nav-justified mb-3"
+                id="pills-tab"
+                role="tablist"
+              >
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="tab-aqp"
+                    data-bs-toggle="pill"
+                    data-bs-target="#arequipa"
+                    type="button"
+                    role="tab"
+                    aria-controls="arequipa"
+                    aria-selected="true"
+                  >
+                    Arequipa
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="tab-lim"
+                    data-bs-toggle="pill"
+                    data-bs-target="#lima"
+                    type="button"
+                    role="tab"
+                    aria-controls="lima"
+                    aria-selected="false"
+                  >
+                    Lima
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="tab-cus"
+                    data-bs-toggle="pill"
+                    data-bs-target="#cusco"
+                    type="button"
+                    role="tab"
+                    aria-controls="cusco"
+                    aria-selected="false"
+                  >
+                    Cusco
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="tab-pun"
+                    data-bs-toggle="pill"
+                    data-bs-target="#puno"
+                    type="button"
+                    role="tab"
+                    aria-controls="puno"
+                    aria-selected="false"
+                  >
+                    Puno
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="tab-pm"
+                    data-bs-toggle="pill"
+                    data-bs-target="#puerto"
+                    type="button"
+                    role="tab"
+                    aria-controls="puerto"
+                    aria-selected="false"
+                  >
+                    Puerto Maldonado
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content">
+                <!-- AREQUIPA -->
+                <div
+                  class="tab-pane fade show active"
+                  id="arequipa"
+                  role="tabpanel"
+                  aria-labelledby="tab-aqp"
+                  tabindex="0"
+                >
+                  <div class="card mb-3 text-center">
+                    <div class="card-header fw-semibold">Sede Central</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Calle Mercaderes 456, Cercado, Arequipa<br />
+                        Teléfono: 054-281234<br />
+                        WhatsApp: +51 987 654 321
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3827.425883737568!2d-71.5368416!3d-16.3988889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91424a56a6555555%3A0x5555555555555555!2sCalle+Mercaderes+456%2C+Arequipa!5e0!3m2!1ses!2spe!4v1541966038530"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  <div class="card text-center">
+                    <div class="card-header fw-semibold">Sucursal Yanahuara</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Av. Ejército 789, Yanahuara, Arequipa<br />
+                        WhatsApp: +51 998 088 151
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3827.35!2d-71.54!3d-16.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDI0JzAwLjAiUyA3McKwMzInMjQuMCJX!5e0!3m2!1ses!2spe!4v1541966138527"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- LIMA -->
+                <div
+                  class="tab-pane fade"
+                  id="lima"
+                  role="tabpanel"
+                  aria-labelledby="tab-lim"
+                  tabindex="0"
+                >
+                  <div class="card mb-3 text-center">
+                    <div class="card-header fw-semibold">Sede Miraflores</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Av. José Larco 1050, Miraflores, Lima<br />
+                        Teléfono: 01-5463410
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3900.8!2d-77.03!3d-12.12!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDA3JzEyLjAiUyA3N8KwMDEnNDguMCJX!5e0!3m2!1ses-419!2spe!4v1543949208961"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  <div class="card mb-3 text-center">
+                    <div class="card-header fw-semibold">Sucursal San Isidro</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Av. Javier Prado Este 450, San Isidro, Lima<br />
+                        Teléfono: 01-4013682
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.5!2d-77.03!3d-12.09!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDA1JzI0LjAiUyA3N8KwMDEnNDguMCJX!5e0!3m2!1ses-419!2spe!4v1543949340519"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  <div class="card mb-3 text-center">
+                    <div class="card-header fw-semibold">Sucursal Surco</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Av. Caminos del Inca 210, Santiago de Surco, Lima<br />
+                        WhatsApp: +51 958 793 727
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.2!2d-76.98!3d-12.13!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDA3JzQ4LjAiUyA3NsKwNTgnNDguMCJX!5e0!3m2!1ses-419!2spe!4v1543949418935"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  <div class="card text-center">
+                    <div class="card-header fw-semibold">Sucursal Centro</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Jr. Huancavelica 250, Cercado de Lima<br />
+                        WhatsApp: +51 958 793 722
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.8!2d-77.03!3d-12.04!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDAyJzI0LjAiUyA3N8KwMDEnNDguMCJX!5e0!3m2!1ses-419!2spe!4v1543949571652"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CUSCO -->
+                <div
+                  class="tab-pane fade"
+                  id="cusco"
+                  role="tabpanel"
+                  aria-labelledby="tab-cus"
+                  tabindex="0"
+                >
+                  <div class="card text-center">
+                    <div class="card-header fw-semibold">Sede Plaza de Armas</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Portal de Belén 115, Cusco<br />
+                        WhatsApp: +51 998 088 151
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3879.3!2d-71.97!3d-13.51!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDMwJzM2LjAiUyA3McKwNTgnMTIuMCJX!5e0!3m2!1ses-419!2spe!4v1543941427998"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PUNO -->
+                <div
+                  class="tab-pane fade"
+                  id="puno"
+                  role="tabpanel"
+                  aria-labelledby="tab-pun"
+                  tabindex="0"
+                >
+                  <div class="card text-center">
+                    <div class="card-header fw-semibold">Sede Central Puno</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Jr. Lima 380, Puno<br />
+                        WhatsApp: +51 964 167 014
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.2!2d-70.02!3d-15.83!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTXCsDQ5JzQ4LjAiUyA3MMKwMDEnMTIuMCJX!5e0!3m2!1ses!2spe!4v1541975670848"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PUERTO MALDONADO -->
+                <div
+                  class="tab-pane fade"
+                  id="puerto"
+                  role="tabpanel"
+                  aria-labelledby="tab-pm"
+                  tabindex="0"
+                >
+                  <div class="card text-center">
+                    <div class="card-header fw-semibold">Sede Central Madre de Dios</div>
+                    <div class="card-body">
+                      <p class="card-text mb-3 small">
+                        Av. León Velarde 520, Puerto Maldonado<br />
+                        WhatsApp: +51 958 793 709
+                      </p>
+                      <iframe
+                        class="map-embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3855.6!2d-69.18!3d-12.59!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDM1JzI0LjAiUyA2OcKwMTAnNDguMCJX!5e0!3m2!1ses!2spe!4v1541976457024"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -154,7 +427,6 @@
       </div>
     </main>
 
-        <!-- FOOTER -->
     <!-- FOOTER -->
     <footer class="bg-dark text-white-50 py-4 mt-auto">
       <div class="container text-center">
@@ -165,5 +437,120 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js" defer></script>
+    <script>
+      const cityToTabButton = {
+        arequipa: "tab-aqp",
+        lima: "tab-lim",
+        cusco: "tab-cus",
+        puno: "tab-pun",
+        puerto: "tab-pm",
+      };
+
+      function activarCiudad(cityKey) {
+        console.log("Activando ciudad:", cityKey);
+        const btnId = cityToTabButton[cityKey];
+        const btn = document.getElementById(btnId);
+        if (!btn) {
+          console.error("No se encontró el botón para:", cityKey);
+          return;
+        }
+
+        const tab = new bootstrap.Tab(btn);
+        tab.show();
+
+        const collapse = document.getElementById("navbarNav");
+        if (collapse && collapse.classList.contains("show")) {
+          bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+        }
+      }
+
+      document.querySelectorAll("[data-city]").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          activarCiudad(link.dataset.city);
+        });
+      });
+
+      let c = 0;
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+          });
+        } else {
+          alert("Geolocalización no es soportado por el navegador");
+        }
+      }
+
+      function showError() {
+        activarCiudad("arequipa");
+        alert("No se pudo encontrar su ubicación");
+      }
+
+      function showPosition(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        if (c !== 0) return;
+        c++;
+
+        // Arequipa
+        if (
+          lat <= -16.318913 &&
+          lat >= -16.601999 &&
+          lon <= -71.32362 &&
+          lon >= -71.715526
+        ) {
+          activarCiudad("arequipa");
+        }
+        // Cusco
+        else if (
+          lat <= -13.49547 &&
+          lat >= -13.564722 &&
+          lon <= -71.851617 &&
+          lon >= -72.027014
+        ) {
+          activarCiudad("cusco");
+        }
+        // Lima
+        else if (
+          lat <= -11.571302 &&
+          lat >= -12.531158 &&
+          lon <= -76.616633 &&
+          lon >= -77.207426
+        ) {
+          activarCiudad("lima");
+        }
+        // Puno
+        else if (
+          lat <= -15.802924 &&
+          lat >= -15.890278 &&
+          lon <= -69.981585 &&
+          lon >= -70.048878
+        ) {
+          activarCiudad("puno");
+        }
+        // Puerto Maldonado
+        else if (
+          lat <= -12.551307 &&
+          lat >= -12.663718 &&
+          lon <= -69.150619 &&
+          lon >= -69.244688
+        ) {
+          activarCiudad("puerto");
+        } else {
+          activarCiudad("arequipa");
+        }
+
+      }
+
+      window.addEventListener("load", () => {
+        activarCiudad("arequipa");
+        getLocation();
+      });
+    </script>
   </body>
 </html>
