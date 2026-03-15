@@ -16,6 +16,12 @@
 
   const $ = (sel) => document.querySelector(sel);
 
+  const PRICES = {
+    pollo: { "1_4": 20, "1_2": 40, "1": 75 },
+    mostrito: { "1_4": 25, "1_2": 45, "1": 85 },
+    gaseosa: { "0.5L": 5, "1L": 8, "1.5L": 12, "2.25L": 15 }
+  };
+
   function safeParse(json, fallback) {
     try {
       return JSON.parse(json) ?? fallback;
@@ -83,11 +89,6 @@
 
     let mensaje = "Tu carrito:\n\n";
     let total = 0;
-    const PRICES = {
-      pollo: { "1_4": 20, "1_2": 40, "1": 75 },
-      mostrito: { "1_4": 25, "1_2": 45, "1": 85 },
-      gaseosa: { "0.5L": 5, "1L": 8, "1.5L": 12, "2.25L": 15 }
-    };
 
     entries.forEach(([key, item], index) => {
       let detail = "";
@@ -150,6 +151,7 @@
     const btnAuth = document.getElementById("btnAuth");
     const btnListar = document.getElementById("btnListar");
     const btnStock = document.getElementById("btnStock");
+    const btnReportes = document.getElementById("btnReportes");
 
     // Mostrar/ocultar botones administrativos según el rol
     const isAdminOrCook = auth && ["administrador", "cocinero"].includes(auth.cargo);
@@ -159,6 +161,9 @@
     }
     if (btnStock) {
       btnStock.style.display = isAdminOrCook ? "" : "none";
+    }
+    if (btnReportes) {
+      btnReportes.style.display = isAdminOrCook ? "" : "none";
     }
 
     if (btnAuth) {
@@ -713,6 +718,134 @@
     );
   }
 
+  function pageReportes() {
+    if (!requireRole(["administrador", "cocinero"])) return;
+    updateHeaderAuthUI();
+
+    const form = $("#reportForm");
+    if (!form) return;
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const startVal = $("#startDate")?.value;
+      const endVal = $("#endDate")?.value;
+
+      if (!startVal || !endVal) {
+        alert("Selecciona ambas fechas.");
+        return;
+      }
+
+      const start = new Date(startVal);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(endVal);
+      end.setHours(23, 59, 59, 999);
+
+      const allOrders = getOrders();
+      const filtered = allOrders.filter((o) => {
+        const d = new Date(o.createdAt);
+        return d >= start && d <= end;
+      });
+
+      renderReport(filtered);
+    });
+  }
+
+  function renderReport(orders) {
+    const results = $("#reportResults");
+    if (!results) return;
+
+    if (orders.length === 0) {
+      results.innerHTML = `<div class="alert alert-info shadow-sm">No hay pedidos en este rango de fechas.</div>`;
+      return;
+    }
+
+    let totalVentas = 0;
+    const itemsCount = {
+      pollo: { "1_4": 0, "1_2": 0, "1": 0 },
+      mostrito: { "1_4": 0, "1_2": 0, "1": 0 },
+      gaseosas: {} // { "Coca Cola|1L": qty }
+    };
+
+    orders.forEach(o => {
+      const p = o.items?.pollo || {};
+      const m = o.items?.mostrito || {};
+      const gs = o.items?.gaseosas || [];
+
+      // Pollo
+      itemsCount.pollo["1_4"] += Number(p.q1_4 || 0);
+      itemsCount.pollo["1_2"] += Number(p.q1_2 || 0);
+      itemsCount.pollo["1"]   += Number(p.q1   || 0);
+      totalVentas += (Number(p.q1_4 || 0) * PRICES.pollo["1_4"]);
+      totalVentas += (Number(p.q1_2 || 0) * PRICES.pollo["1_2"]);
+      totalVentas += (Number(p.q1   || 0) * PRICES.pollo["1"]);
+
+      // Mostrito
+      itemsCount.mostrito["1_4"] += Number(m.q1_4 || 0);
+      itemsCount.mostrito["1_2"] += Number(m.q1_2 || 0);
+      itemsCount.mostrito["1"]   += Number(m.q1   || 0);
+      totalVentas += (Number(m.q1_4 || 0) * PRICES.mostrito["1_4"]);
+      totalVentas += (Number(m.q1_2 || 0) * PRICES.mostrito["1_2"]);
+      totalVentas += (Number(m.q1   || 0) * PRICES.mostrito["1"]);
+
+      // Gaseosas
+      gs.forEach(g => {
+        const key = `${g.brand} (${g.size})`;
+        itemsCount.gaseosas[key] = (itemsCount.gaseosas[key] || 0) + Number(g.qty || 0);
+        totalVentas += (Number(g.qty || 0) * (PRICES.gaseosa[g.size] || 0));
+      });
+    });
+
+    let itemsHtml = "";
+    const addSection = (title, data) => {
+      let rows = "";
+      for (const [key, qty] of Object.entries(data)) {
+        if (qty > 0) {
+          const label = key === "1_4" ? "1/4" : key === "1_2" ? "1/2" : key === "1" ? "1 Pollo" : key;
+          rows += `<tr><td>${label}</td><td class="text-end fw-bold">${qty}</td></tr>`;
+        }
+      }
+      if (rows) {
+        itemsHtml += `
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-header bg-light fw-bold">${title}</div>
+              <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                  <tbody>${rows}</tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    };
+
+    addSection("Pollo a la Brasa", itemsCount.pollo);
+    addSection("Mostritos", itemsCount.mostrito);
+    addSection("Gaseosas", itemsCount.gaseosas);
+
+    results.innerHTML = `
+      <div class="card shadow-sm border-0 bg-white p-4">
+        <h2 class="h5 mb-4 text-center border-bottom pb-2">Resultados del Reporte</h2>
+
+        <div class="alert alert-success d-flex justify-content-between align-items-center mb-4 shadow-sm">
+          <span class="fs-5 fw-bold"><i class="bi bi-cash-coin me-2"></i>Total Ventas:</span>
+          <span class="fs-4 fw-bold">S/ ${totalVentas.toFixed(2)}</span>
+        </div>
+
+        <div class="row g-3">
+          ${itemsHtml}
+        </div>
+
+        <div class="mt-4 text-center text-muted small">
+          Pedidos procesados: ${orders.length}
+        </div>
+      </div>
+    `;
+  }
+
   function pageAdminPedidos() {
     if (!requireRole(["administrador", "cocinero"])) return;
     updateHeaderAuthUI();
@@ -831,6 +964,7 @@
     if (page === "order-summary") pageOrderSummary();
     if (page === "stock") pageStock();
     if (page === "admin-pedidos") pageAdminPedidos();
+    if (page === "reportes") pageReportes();
   });
 
   // Exponer algunas cosas si quieres usarlas luego
