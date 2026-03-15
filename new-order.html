@@ -18,21 +18,10 @@
     />
   </head>
 
-<<<<<<< HEAD
-  <body
-    data-page="new-order"
-    class="bg-warning-subtle d-flex flex-column min-vh-100"
-  >
-    <!-- HEADER -->
-    <nav
-      class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient border-bottom shadow-sm"
-    >
-=======
   <body data-page="new-order" class="bg-warning-subtle d-flex flex-column min-vh-100">
         <!-- HEADER -->
     <!-- HEADER -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient border-bottom shadow-sm">
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
       <div class="container py-2">
         <a
           class="navbar-brand d-flex align-items-center gap-2"
@@ -45,21 +34,6 @@
             height="42"
             class="rounded-circle"
           />
-<<<<<<< HEAD
-          <span class="fw-bold">Pollos a la Brasa Suárez</span>
-        </a>
-
-        <div class="ms-auto d-flex gap-2">
-          <a class="btn btn-light" href="admin-pedidos.html" id="btnListar"
-            ><i class="bi bi-list-ul me-1"></i> Listar pedidos</a
-          >
-
-          <a class="btn btn-outline-secondary" href="contactanos.html"
-            >Contáctanos</a
-          >
-
-          <a class="btn btn-primary" href="login.html" id="btnAuth">Login</a>
-=======
           <span class="fw-bold text-uppercase tracking-wider">Pollos a la Brasa Suárez</span>
         </a>
 
@@ -73,8 +47,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-2 mt-lg-0">
-            <li class="nav-item">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-2 mt-lg-0"><li class="nav-item">
               <a
                 class="btn btn-light btn-sm w-100 shadow-sm"
                 href="admin-pedidos.html"
@@ -90,8 +63,13 @@
             <li class="nav-item">
               <a class="btn btn-light btn-sm w-100 text-danger fw-bold" href="login.html" id="btnAuth"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
             </li>
+            <li class="nav-item">
+              <button class="btn btn-light btn-sm w-100 position-relative" id="btnVerCarrito" type="button">
+                <i class="bi bi-cart3"></i>
+                <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+              </button>
+            </li>
           </ul>
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
         </div>
       </div>
     </nav>
@@ -105,11 +83,7 @@
       >
         <h1 class="h4 m-0">Pide tu orden</h1>
         <div class="d-flex gap-2">
-<<<<<<< HEAD
-          <a class="btn btn-outline-dark btn-sm shadow-sm" href="stock.html" id="btnStock"
-=======
           <a class="btn btn-outline-dark btn-sm shadow-sm" href="stock.html"
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
             ><i class="bi bi-box-seam me-1"></i> Control de stock</a
           >
         </div>
@@ -125,13 +99,7 @@
           <div class="col-12 col-lg-4">
             <div class="card shadow-sm h-100 border-0">
               <div class="card-body">
-<<<<<<< HEAD
-                <h2 class="h6 mb-3">
-                  <i class="bi bi-egg-fried text-danger me-1"></i> Agregar Pollo
-                </h2>
-=======
                 <h2 class="h6 mb-3"><i class="bi bi-egg-fried text-danger me-1"></i> Agregar Pollo</h2>
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
 
                 <label class="form-label">Porción</label>
                 <select id="polloPortion" class="form-select mb-2">
@@ -164,13 +132,7 @@
           <div class="col-12 col-lg-4">
             <div class="card shadow-sm h-100 border-0">
               <div class="card-body">
-<<<<<<< HEAD
-                <h2 class="h6 mb-3">
-                  <i class="bi bi-fire text-danger me-1"></i> Agregar Mostrito
-                </h2>
-=======
                 <h2 class="h6 mb-3"><i class="bi bi-fire text-danger me-1"></i> Agregar Mostrito</h2>
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
 
                 <label class="form-label">Porción</label>
                 <select id="mostritoPortion" class="form-select mb-2">
@@ -203,14 +165,7 @@
           <div class="col-12 col-lg-4">
             <div class="card shadow-sm h-100 border-0">
               <div class="card-body">
-<<<<<<< HEAD
-                <h2 class="h6 mb-3">
-                  <i class="bi bi-cup-straw text-danger me-1"></i> Agregar
-                  Gaseosa
-                </h2>
-=======
                 <h2 class="h6 mb-3"><i class="bi bi-cup-straw text-danger me-1"></i> Agregar Gaseosa</h2>
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
 
                 <label class="form-label">Marca</label>
                 <select id="sodaBrand" class="form-select mb-2">
@@ -326,7 +281,7 @@
         const sodaQty = document.getElementById("sodaQty");
         const addSoda = document.getElementById("addSoda");
 
-        const cart = new Map();
+        const cart = new Map(window.PAS.getCartDraft());
         const SODAS = [
           "Coca Cola",
           "Inka Kola",
@@ -362,12 +317,9 @@
 
         function syncHidden() {
           const cartArray = Array.from(cart.values());
-<<<<<<< HEAD
-          document.getElementById("cart_json").value =
-            JSON.stringify(cartArray);
-=======
           document.getElementById("cart_json").value = JSON.stringify(cartArray);
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
+          window.PAS.saveCartDraft(Array.from(cart.entries()));
+          window.PAS.updateCartNavUI();
         }
 
         function clearRenderedItems() {

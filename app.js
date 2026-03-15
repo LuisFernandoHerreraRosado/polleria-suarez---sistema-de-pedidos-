@@ -11,6 +11,7 @@
     AUTH: "pas_auth",
     ORDERS: "pas_orders",
     CURRENT_ORDER: "pas_current_order",
+    CART_DRAFT: "pas_cart_draft",
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -55,6 +56,61 @@
   }
   function clearCurrentOrder() {
     sessionStorage.removeItem(KEYS.CURRENT_ORDER);
+  }
+
+  function getCartDraft() {
+    return safeParse(localStorage.getItem(KEYS.CART_DRAFT), []);
+  }
+  function saveCartDraft(cartEntries) {
+    localStorage.setItem(KEYS.CART_DRAFT, JSON.stringify(cartEntries));
+  }
+
+  function updateCartNavUI() {
+    const entries = getCartDraft();
+    const count = entries.reduce((acc, [key, item]) => acc + (item.qty || 0), 0);
+    const cartCountEl = document.getElementById("cartCount");
+    if (cartCountEl) {
+      cartCountEl.textContent = count;
+    }
+  }
+
+  function showCartSummary() {
+    const entries = getCartDraft();
+    if (entries.length === 0) {
+      alert("El carrito está vacío.");
+      return;
+    }
+
+    let mensaje = "Tu carrito:\n\n";
+    let total = 0;
+    const PRICES = {
+      pollo: { "1_4": 20, "1_2": 40, "1": 75 },
+      mostrito: { "1_4": 25, "1_2": 45, "1": 85 },
+      gaseosa: { "0.5L": 5, "1L": 8, "1.5L": 12, "2.25L": 15 }
+    };
+
+    entries.forEach(([key, item], index) => {
+      let detail = "";
+      let price = 0;
+      const portionLabel = (p) => (p === "1_4" ? "1/4" : p === "1_2" ? "1/2" : "1");
+
+      if (item.type === "pollo") {
+        detail = `Pollo (${portionLabel(item.portion)})`;
+        price = PRICES.pollo[item.portion] * item.qty;
+      } else if (item.type === "mostrito") {
+        detail = `Mostrito (${portionLabel(item.portion)})`;
+        price = PRICES.mostrito[item.portion] * item.qty;
+      } else if (item.type === "gaseosa") {
+        detail = `Gaseosa ${item.brand} (${item.size})`;
+        price = PRICES.gaseosa[item.size] * item.qty;
+      }
+
+      mensaje += `${index + 1}. ${detail} - Cantidad: ${item.qty} - S/ ${price.toFixed(2)}\n`;
+      total += price;
+    });
+
+    mensaje += `\nTotal: S/ ${total.toFixed(2)}`;
+    alert(mensaje);
   }
 
   function qs(name) {
@@ -284,11 +340,7 @@
       };
     }
 
-<<<<<<< HEAD
-    // Pollo
-=======
     // Fallback Pollo
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
     const pollo = {
       q1_4: Number($("#pollo_1_4")?.value || 0),
       q1_2: Number($("#pollo_1_2")?.value || 0),
@@ -762,6 +814,13 @@
   // ====== Router por atributo data-page ======
   document.addEventListener("DOMContentLoaded", () => {
     updateHeaderAuthUI();
+    updateCartNavUI();
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#btnVerCarrito")) {
+        showCartSummary();
+      }
+    });
 
     const page = document.body.getAttribute("data-page");
     if (!page) return;
@@ -780,5 +839,8 @@
     getAuth,
     getOrders,
     calcStockFromOrders,
+    getCartDraft,
+    saveCartDraft,
+    updateCartNavUI,
   };
 })();

@@ -14,15 +14,8 @@
     />
   </head>
 
-<<<<<<< HEAD
-  <body
-    data-page="contact"
-    class="bg-warning-subtle d-flex flex-column min-vh-100"
-  >
-=======
   <body data-page="contact" class="bg-warning-subtle d-flex flex-column min-vh-100">
         <!-- HEADER -->
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
     <!-- HEADER -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient border-bottom shadow-sm">
       <div class="container py-2">
@@ -40,19 +33,6 @@
           <span class="fw-bold text-uppercase tracking-wider">Pollos a la Brasa Suárez</span>
         </a>
 
-<<<<<<< HEAD
-        <div class="ms-auto d-flex gap-2">
-          <a
-            class="btn btn-outline-secondary"
-            href="admin-pedidos.html"
-            id="btnListar"
-            >Listar pedidos</a
-          >
-          <a class="btn btn-outline-secondary" href="contactanos.html"
-            >Contáctanos</a
-          >
-          <a class="btn btn-primary" href="login.html" id="btnAuth">Login</a>
-=======
         <button
           class="navbar-toggler"
           type="button"
@@ -63,8 +43,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-2 mt-lg-0">
-            <li class="nav-item">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-2 mt-lg-0"><li class="nav-item">
               <a
                 class="btn btn-light btn-sm w-100 shadow-sm"
                 href="admin-pedidos.html"
@@ -80,8 +59,13 @@
             <li class="nav-item">
               <a class="btn btn-light btn-sm w-100 text-danger fw-bold" href="login.html" id="btnAuth"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
             </li>
+            <li class="nav-item">
+              <button class="btn btn-light btn-sm w-100 position-relative" id="btnVerCarrito" type="button">
+                <i class="bi bi-cart3"></i>
+                <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+              </button>
+            </li>
           </ul>
->>>>>>> 24cbc72d6ad4c1dc04baefd4c2180e76f2594d02
         </div>
       </div>
     </nav>
