@@ -770,94 +770,98 @@
       return;
     }
 
-    let totalVentas = 0;
-    const itemsCount = {
-      pollo: { "1_4": 0, "1_2": 0, 1: 0 },
-      mostrito: { "1_4": 0, "1_2": 0, 1: 0 },
-      gaseosas: {}, // { "Coca Cola|1L": qty }
-    };
+    let totalGeneral = 0;
+    const orderRows = orders
+      .map((o) => {
+        let orderTotal = 0;
+        const details = [];
 
-    orders.forEach((o) => {
-      const p = o.items?.pollo || {};
-      const m = o.items?.mostrito || {};
-      const gs = o.items?.gaseosas || [];
+        const p = o.items?.pollo || {};
+        const m = o.items?.mostrito || {};
+        const gs = o.items?.gaseosas || [];
 
-      // Pollo
-      itemsCount.pollo["1_4"] += Number(p.q1_4 || 0);
-      itemsCount.pollo["1_2"] += Number(p.q1_2 || 0);
-      itemsCount.pollo["1"] += Number(p.q1 || 0);
-      totalVentas += Number(p.q1_4 || 0) * PRICES.pollo["1_4"];
-      totalVentas += Number(p.q1_2 || 0) * PRICES.pollo["1_2"];
-      totalVentas += Number(p.q1 || 0) * PRICES.pollo["1"];
-
-      // Mostrito
-      itemsCount.mostrito["1_4"] += Number(m.q1_4 || 0);
-      itemsCount.mostrito["1_2"] += Number(m.q1_2 || 0);
-      itemsCount.mostrito["1"] += Number(m.q1 || 0);
-      totalVentas += Number(m.q1_4 || 0) * PRICES.mostrito["1_4"];
-      totalVentas += Number(m.q1_2 || 0) * PRICES.mostrito["1_2"];
-      totalVentas += Number(m.q1 || 0) * PRICES.mostrito["1"];
-
-      // Gaseosas
-      gs.forEach((g) => {
-        const key = `${g.brand} (${g.size})`;
-        itemsCount.gaseosas[key] =
-          (itemsCount.gaseosas[key] || 0) + Number(g.qty || 0);
-        totalVentas += Number(g.qty || 0) * (PRICES.gaseosa[g.size] || 0);
-      });
-    });
-
-    let itemsHtml = "";
-    const addSection = (title, data) => {
-      let rows = "";
-      for (const [key, qty] of Object.entries(data)) {
-        if (qty > 0) {
-          const label =
-            key === "1_4"
-              ? "1/4"
-              : key === "1_2"
-                ? "1/2"
-                : key === "1"
-                  ? "1 Pollo"
-                  : key;
-          rows += `<tr><td>${label}</td><td class="text-end fw-bold">${qty}</td></tr>`;
+        // Pollo
+        if (p.q1_4) {
+          const cost = p.q1_4 * PRICES.pollo["1_4"];
+          orderTotal += cost;
+          details.push(`${p.q1_4} x Pollo 1/4`);
         }
-      }
-      if (rows) {
-        itemsHtml += `
-          <div class="col-12 col-md-4 mb-3">
-            <div class="card h-100 border-0 shadow-sm">
-              <div class="card-header bg-light fw-bold">${title}</div>
-              <div class="card-body p-0">
-                <table class="table table-sm mb-0">
-                  <tbody>${rows}</tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-    };
+        if (p.q1_2) {
+          const cost = p.q1_2 * PRICES.pollo["1_2"];
+          orderTotal += cost;
+          details.push(`${p.q1_2} x Pollo 1/2`);
+        }
+        if (p.q1) {
+          const cost = p.q1 * PRICES.pollo["1"];
+          orderTotal += cost;
+          details.push(`${p.q1} x Pollo 1`);
+        }
 
-    addSection("Pollo a la Brasa", itemsCount.pollo);
-    addSection("Mostritos", itemsCount.mostrito);
-    addSection("Gaseosas", itemsCount.gaseosas);
+        // Mostrito
+        if (m.q1_4) {
+          const cost = m.q1_4 * PRICES.mostrito["1_4"];
+          orderTotal += cost;
+          details.push(`${m.q1_4} x Mostrito 1/4`);
+        }
+        if (m.q1_2) {
+          const cost = m.q1_2 * PRICES.mostrito["1_2"];
+          orderTotal += cost;
+          details.push(`${m.q1_2} x Mostrito 1/2`);
+        }
+        if (m.q1) {
+          const cost = m.q1 * PRICES.mostrito["1"];
+          orderTotal += cost;
+          details.push(`${m.q1} x Mostrito 1`);
+        }
+
+        // Gaseosas
+        gs.forEach((g) => {
+          const cost = Number(g.qty || 0) * (PRICES.gaseosa[g.size] || 0);
+          orderTotal += cost;
+          details.push(`${g.qty} x Gaseosa ${g.brand} (${g.size})`);
+        });
+
+        totalGeneral += orderTotal;
+
+        return `
+        <tr>
+          <td class="small fw-bold">${escapeHtml(o.id)}</td>
+          <td class="small text-nowrap">${new Date(o.createdAt).toLocaleDateString()} ${new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+          <td class="small">${details.join(", ")}</td>
+          <td class="text-end fw-bold">S/ ${orderTotal.toFixed(2)}</td>
+        </tr>
+      `;
+      })
+      .join("");
 
     results.innerHTML = `
       <div class="card shadow-sm border-0 bg-white p-4">
-        <h2 class="h5 mb-4 text-center border-bottom pb-2">Resultados del Reporte</h2>
+        <h2 class="h5 mb-4 text-center border-bottom pb-2">Detalle de Ventas por Pedido</h2>
 
-        <div class="alert alert-success d-flex justify-content-between align-items-center mb-4 shadow-sm">
-          <span class="fs-5 fw-bold"><i class="bi bi-cash-coin me-2"></i>Total Ventas:</span>
-          <span class="fs-4 fw-bold">S/ ${totalVentas.toFixed(2)}</span>
+        <div class="table-responsive mb-4">
+          <table class="table table-hover table-bordered align-middle mb-0">
+            <thead class="table-danger text-white">
+              <tr>
+                <th>Pedido ID</th>
+                <th>Fecha</th>
+                <th>Detalle de Productos</th>
+                <th class="text-end">Total (S/)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${orderRows}
+            </tbody>
+            <tfoot class="table-light">
+              <tr>
+                <td colspan="3" class="text-end fw-bold fs-5">TOTAL GENERAL:</td>
+                <td class="text-end fw-bold fs-5 text-danger">S/ ${totalGeneral.toFixed(2)}</td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
 
-        <div class="row g-3">
-          ${itemsHtml}
-        </div>
-
-        <div class="mt-4 text-center text-muted small">
-          Pedidos procesados: ${orders.length}
+        <div class="text-center text-muted small">
+          Pedidos procesados en este rango: ${orders.length}
         </div>
       </div>
     `;
