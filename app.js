@@ -17,9 +17,9 @@
   const $ = (sel) => document.querySelector(sel);
 
   const PRICES = {
-    pollo: { "1_4": 20, "1_2": 40, "1": 75 },
-    mostrito: { "1_4": 25, "1_2": 45, "1": 85 },
-    gaseosa: { "0.5L": 5, "1L": 8, "1.5L": 12, "2.25L": 15 }
+    pollo: { "1_4": 20, "1_2": 40, 1: 75 },
+    mostrito: { "1_4": 25, "1_2": 45, 1: 85 },
+    gaseosa: { "0.5L": 5, "1L": 8, "1.5L": 12, "2.25L": 15 },
   };
 
   function safeParse(json, fallback) {
@@ -73,7 +73,10 @@
 
   function updateCartNavUI() {
     const entries = getCartDraft();
-    const count = entries.reduce((acc, [key, item]) => acc + (item.qty || 0), 0);
+    const count = entries.reduce(
+      (acc, [key, item]) => acc + (item.qty || 0),
+      0,
+    );
     const cartCountEl = document.getElementById("cartCount");
     if (cartCountEl) {
       cartCountEl.textContent = count;
@@ -93,7 +96,8 @@
     entries.forEach(([key, item], index) => {
       let detail = "";
       let price = 0;
-      const portionLabel = (p) => (p === "1_4" ? "1/4" : p === "1_2" ? "1/2" : "1");
+      const portionLabel = (p) =>
+        p === "1_4" ? "1/4" : p === "1_2" ? "1/2" : "1";
 
       if (item.type === "pollo") {
         detail = `Pollo (${portionLabel(item.portion)})`;
@@ -154,7 +158,8 @@
     const btnReportes = document.getElementById("btnReportes");
 
     // Mostrar/ocultar botones administrativos según el rol
-    const isAdminOrCook = auth && ["administrador", "cocinero"].includes(auth.cargo);
+    const isAdminOrCook =
+      auth && ["administrador", "cocinero"].includes(auth.cargo);
 
     if (btnListar) {
       btnListar.style.display = isAdminOrCook ? "" : "none";
@@ -535,7 +540,8 @@
       // Verificar login antes de proceder
       const auth = getAuth();
       if (!auth) {
-        window.location.href = "login.html?msg=" +
+        window.location.href =
+          "login.html?msg=" +
           encodeURIComponent("Debes iniciar sesión para realizar un pedido.") +
           "&type=warning&next=new-order.html";
         return;
@@ -564,8 +570,11 @@
     // Verificar login
     const auth = getAuth();
     if (!auth) {
-      window.location.href = "login.html?msg=" +
-        encodeURIComponent("Debes iniciar sesión para ver el resumen del pedido.") +
+      window.location.href =
+        "login.html?msg=" +
+        encodeURIComponent(
+          "Debes iniciar sesión para ver el resumen del pedido.",
+        ) +
         "&type=warning&next=order-summary.html";
       return;
     }
@@ -763,12 +772,12 @@
 
     let totalVentas = 0;
     const itemsCount = {
-      pollo: { "1_4": 0, "1_2": 0, "1": 0 },
-      mostrito: { "1_4": 0, "1_2": 0, "1": 0 },
-      gaseosas: {} // { "Coca Cola|1L": qty }
+      pollo: { "1_4": 0, "1_2": 0, 1: 0 },
+      mostrito: { "1_4": 0, "1_2": 0, 1: 0 },
+      gaseosas: {}, // { "Coca Cola|1L": qty }
     };
 
-    orders.forEach(o => {
+    orders.forEach((o) => {
       const p = o.items?.pollo || {};
       const m = o.items?.mostrito || {};
       const gs = o.items?.gaseosas || [];
@@ -776,24 +785,25 @@
       // Pollo
       itemsCount.pollo["1_4"] += Number(p.q1_4 || 0);
       itemsCount.pollo["1_2"] += Number(p.q1_2 || 0);
-      itemsCount.pollo["1"]   += Number(p.q1   || 0);
-      totalVentas += (Number(p.q1_4 || 0) * PRICES.pollo["1_4"]);
-      totalVentas += (Number(p.q1_2 || 0) * PRICES.pollo["1_2"]);
-      totalVentas += (Number(p.q1   || 0) * PRICES.pollo["1"]);
+      itemsCount.pollo["1"] += Number(p.q1 || 0);
+      totalVentas += Number(p.q1_4 || 0) * PRICES.pollo["1_4"];
+      totalVentas += Number(p.q1_2 || 0) * PRICES.pollo["1_2"];
+      totalVentas += Number(p.q1 || 0) * PRICES.pollo["1"];
 
       // Mostrito
       itemsCount.mostrito["1_4"] += Number(m.q1_4 || 0);
       itemsCount.mostrito["1_2"] += Number(m.q1_2 || 0);
-      itemsCount.mostrito["1"]   += Number(m.q1   || 0);
-      totalVentas += (Number(m.q1_4 || 0) * PRICES.mostrito["1_4"]);
-      totalVentas += (Number(m.q1_2 || 0) * PRICES.mostrito["1_2"]);
-      totalVentas += (Number(m.q1   || 0) * PRICES.mostrito["1"]);
+      itemsCount.mostrito["1"] += Number(m.q1 || 0);
+      totalVentas += Number(m.q1_4 || 0) * PRICES.mostrito["1_4"];
+      totalVentas += Number(m.q1_2 || 0) * PRICES.mostrito["1_2"];
+      totalVentas += Number(m.q1 || 0) * PRICES.mostrito["1"];
 
       // Gaseosas
-      gs.forEach(g => {
+      gs.forEach((g) => {
         const key = `${g.brand} (${g.size})`;
-        itemsCount.gaseosas[key] = (itemsCount.gaseosas[key] || 0) + Number(g.qty || 0);
-        totalVentas += (Number(g.qty || 0) * (PRICES.gaseosa[g.size] || 0));
+        itemsCount.gaseosas[key] =
+          (itemsCount.gaseosas[key] || 0) + Number(g.qty || 0);
+        totalVentas += Number(g.qty || 0) * (PRICES.gaseosa[g.size] || 0);
       });
     });
 
@@ -802,7 +812,14 @@
       let rows = "";
       for (const [key, qty] of Object.entries(data)) {
         if (qty > 0) {
-          const label = key === "1_4" ? "1/4" : key === "1_2" ? "1/2" : key === "1" ? "1 Pollo" : key;
+          const label =
+            key === "1_4"
+              ? "1/4"
+              : key === "1_2"
+                ? "1/2"
+                : key === "1"
+                  ? "1 Pollo"
+                  : key;
           rows += `<tr><td>${label}</td><td class="text-end fw-bold">${qty}</td></tr>`;
         }
       }
@@ -951,7 +968,14 @@
 
     document.addEventListener("click", (e) => {
       if (e.target.closest("#btnVerCarrito")) {
-        showCartSummary();
+        e.preventDefault();
+        try {
+          const order = buildOrderFromForm();
+          setCurrentOrder(order);
+          window.location.href = "order-summary.html";
+        } catch (err) {
+          fail(err.message || "Error al crear el pedido.");
+        }
       }
     });
 
