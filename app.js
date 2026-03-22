@@ -168,7 +168,7 @@
       btnStock.style.display = isAdminOrCook ? "" : "none";
     }
     if (btnReportes) {
-      btnReportes.style.display = isAdminOrCook ? "" : "none";
+      btnReportes.style.display = auth && auth.cargo === "administrador" ? "" : "none";
     }
 
     if (btnAuth) {
@@ -473,9 +473,10 @@
         apellidos: found.apellidos,
         email: found.email,
         cargo: found.cargo,
+        direccion: found.direccion,
       });
 
-      const goTo = next ? decodeURIComponent(next) : "admin-pedidos.html";
+      const goTo = next ? decodeURIComponent(next) : "new-order.html";
       window.location.href =
         goTo +
         "?msg=" +
@@ -497,6 +498,7 @@
       const nombre = ($("#regNombre")?.value || "").trim();
       const apellidos = ($("#regApellidos")?.value || "").trim();
       const email = ($("#regEmail")?.value || "").trim().toLowerCase();
+      const direccion = ($("#regDireccion")?.value || "").trim();
       const password = $("#regPassword")?.value || "";
       const confirm = $("#regConfirm")?.value || "";
       const cargo = $("#regCargo")?.value || "";
@@ -507,7 +509,7 @@
           alertBox.innerHTML = `<div class="alert alert-danger shadow-sm">${escapeHtml(m)}</div>`;
       };
 
-      if (!nombre || !apellidos || !email || !password || !confirm || !cargo)
+      if (!nombre || !apellidos || !email || !direccion || !password || !confirm || !cargo)
         return fail("Completa todos los campos.");
       if (password.length < 4)
         return fail("La contraseña debe tener al menos 4 caracteres.");
@@ -517,7 +519,7 @@
       if (users.some((u) => u.email === email))
         return fail("Este correo ya está registrado.");
 
-      users.push({ nombre, apellidos, email, password, cargo });
+      users.push({ nombre, apellidos, email, direccion, password, cargo });
       saveUsers(users);
 
       window.location.href =
@@ -611,12 +613,43 @@
       orders.unshift(order); // último primero
       saveOrders(orders);
 
+      // Calcular total para el modal
+      let total = 0;
+      const p = order.items?.pollo || {};
+      const m = order.items?.mostrito || {};
+      const gs = order.items?.gaseosas || [];
+
+      total += (p.q1_4 || 0) * PRICES.pollo["1_4"];
+      total += (p.q1_2 || 0) * PRICES.pollo["1_2"];
+      total += (p.q1 || 0) * PRICES.pollo["1"];
+      total += (m.q1_4 || 0) * PRICES.mostrito["1_4"];
+      total += (m.q1_2 || 0) * PRICES.mostrito["1_2"];
+      total += (m.q1 || 0) * PRICES.mostrito["1"];
+      gs.forEach((g) => { total += (g.qty || 0) * (PRICES.gaseosa[g.size] || 0); });
+
+      // Limpiar borrador del carrito (para que new-order aparezca vacío)
+      saveCartDraft([]);
+      updateCartNavUI();
       clearCurrentOrder();
 
-      window.location.href =
-        "new-order.html?msg=" +
-        encodeURIComponent("Se realizó el pedido con éxito") +
-        "&type=success";
+      // Mostrar Modal
+      const modalEl = document.getElementById("successModal");
+      if (modalEl) {
+        $("#modalOrderId").textContent = order.id;
+        $("#modalAddress").textContent = auth.direccion || "Dirección registrada";
+        $("#modalPaymentMethod").textContent = order.paymentMethod;
+        $("#modalTotalPrice").textContent = `S/ ${total.toFixed(2)}`;
+
+        const bsModal = new bootstrap.Modal(modalEl);
+        bsModal.show();
+
+        $("#btnCloseModal")?.addEventListener("click", () => {
+          bsModal.hide();
+          window.location.href = "new-order.html";
+        });
+      } else {
+        window.location.href = "new-order.html?msg=" + encodeURIComponent("Pedido exitoso");
+      }
     });
 
     btnBack?.addEventListener("click", () => {
@@ -728,7 +761,7 @@
   }
 
   function pageReportes() {
-    if (!requireRole(["administrador", "cocinero"])) return;
+    if (!requireRole(["administrador"])) return;
     updateHeaderAuthUI();
 
     const form = $("#reportForm");

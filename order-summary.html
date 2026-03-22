@@ -127,6 +127,36 @@
       </div>
     </footer>
 
+    <!-- Modal de Éxito del Pedido -->
+    <div class="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="successModalLabel"><i class="bi bi-check-circle-fill me-2"></i>¡Pedido Realizado!</h5>
+          </div>
+          <div class="modal-body">
+            <div class="text-center mb-3">
+              <img src="https://cdn-icons-png.flaticon.com/512/2972/2972185.png" alt="Motorizado" style="width: 80px;">
+            </div>
+            <p>¡Buenas noticias! Tu pedido ya está en camino y llegará aproximadamente en <strong>50 minutos</strong>.</p>
+            <hr>
+            <ul class="list-unstyled">
+              <li class="mb-2"><strong>Número de Pedido:</strong> <span id="modalOrderId"></span></li>
+              <li class="mb-2"><strong>Dirección de Entrega:</strong> <span id="modalAddress"></span></li>
+              <li class="mb-2"><strong>Método de Pago:</strong> <span id="modalPaymentMethod"></span></li>
+              <li class="mb-2"><strong>Total a Pagar:</strong> <span class="text-danger fw-bold" id="modalTotalPrice"></span></li>
+            </ul>
+            <div class="alert alert-info py-2 small">
+              <i class="bi bi-info-circle-fill me-1"></i> El motorizado ya se está acercando. Por favor, ten listo tu método de pago.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success w-100" id="btnCloseModal">Entendido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js" defer></script>
   </body>
