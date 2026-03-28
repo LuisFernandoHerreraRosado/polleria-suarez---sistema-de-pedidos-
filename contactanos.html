@@ -434,6 +434,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js" defer></script>
     <script>
+      // Mapeo de claves de ciudad a los IDs de los botones de pestañas en la interfaz
       const cityToTabButton = {
         arequipa: "tab-aqp",
         lima: "tab-lim",
@@ -442,6 +443,10 @@
         puerto: "tab-pm",
       };
 
+      /**
+       * Activa la pestaña correspondiente a una ciudad.
+       * @param {string} cityKey - Clave de la ciudad (ej: 'arequipa').
+       */
       function activarCiudad(cityKey) {
         console.log("Activando ciudad:", cityKey);
         const btnId = cityToTabButton[cityKey];
@@ -451,15 +456,18 @@
           return;
         }
 
+        // Usa Bootstrap para mostrar la pestaña seleccionada
         const tab = new bootstrap.Tab(btn);
         tab.show();
 
+        // Si el menú móvil está abierto, lo cierra al seleccionar una ciudad
         const collapse = document.getElementById("navbarNav");
         if (collapse && collapse.classList.contains("show")) {
           bootstrap.Collapse.getOrCreateInstance(collapse).hide();
         }
       }
 
+      // Agrega eventos de clic a todos los elementos con el atributo data-city
       document.querySelectorAll("[data-city]").forEach((link) => {
         link.addEventListener("click", (e) => {
           e.preventDefault();
@@ -467,8 +475,11 @@
         });
       });
 
-      let c = 0;
+      let c = 0; // Contador para asegurar que la ubicación solo se procese una vez
 
+      /**
+       * Intenta obtener la ubicación geográfica actual del usuario.
+       */
       function getLocation() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition, showError, {
@@ -481,11 +492,18 @@
         }
       }
 
+      /**
+       * Se ejecuta si ocurre un error al obtener la ubicación.
+       */
       function showError() {
-        activarCiudad("arequipa");
+        activarCiudad("arequipa"); // Por defecto activa Arequipa
         alert("No se pudo encontrar su ubicación");
       }
 
+      /**
+       * Procesa la posición geográfica y activa la ciudad más cercana basándose en coordenadas.
+       * @param {Object} position - Objeto con la latitud y longitud.
+       */
       function showPosition(position) {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
@@ -493,7 +511,7 @@
         if (c !== 0) return;
         c++;
 
-        // Arequipa
+        // Arequipa (Rangos aproximados de coordenadas)
         if (
           lat <= -16.318913 &&
           lat >= -16.601999 &&
@@ -538,11 +556,13 @@
         ) {
           activarCiudad("puerto");
         } else {
+          // Si no coincide con ninguna ciudad, por defecto Arequipa
           activarCiudad("arequipa");
         }
 
       }
 
+      // Al cargar la página, se activa Arequipa por defecto y se intenta geolocalizar
       window.addEventListener("load", () => {
         activarCiudad("arequipa");
         getLocation();

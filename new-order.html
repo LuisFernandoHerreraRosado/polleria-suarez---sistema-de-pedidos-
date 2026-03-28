@@ -269,27 +269,31 @@
     <!-- app.js del proyecto (NO se toca) -->
     <script src="app.js" defer></script>
 
-    <!-- Script SOLO para esta pantalla -->
+    <!-- Script SOLO para esta pantalla: Gestión del Carrito -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        // Elementos de la interfaz para alertas y listado
         const cartAlert = document.getElementById("cartAlert");
-
         const cartList = document.getElementById("cartList");
         const cartEmptyLi = document.getElementById("cartEmptyLi");
 
+        // Elementos del formulario para Pollo
         const polloPortion = document.getElementById("polloPortion");
         const polloQty = document.getElementById("polloQty");
         const addPollo = document.getElementById("addPollo");
 
+        // Elementos del formulario para Mostrito
         const mostritoPortion = document.getElementById("mostritoPortion");
         const mostritoQty = document.getElementById("mostritoQty");
         const addMostrito = document.getElementById("addMostrito");
 
+        // Elementos del formulario para Gaseosa
         const sodaBrand = document.getElementById("sodaBrand");
         const sodaSize = document.getElementById("sodaSize");
         const sodaQty = document.getElementById("sodaQty");
         const addSoda = document.getElementById("addSoda");
 
+        // Inicializa el carrito desde el borrador guardado en localStorage
         const cart = new Map(window.PAS.getCartDraft());
         const SODAS = [
           "Coca Cola",
@@ -299,16 +303,19 @@
           "Cola Escocesa",
         ];
 
+        // Convierte el nombre de una marca en un slug (minúsculas y guiones bajos)
         function slugifyBrand(brand) {
           return brand.toLowerCase().replaceAll(" ", "_");
         }
 
+        // Convierte el valor de la porción en una etiqueta legible
         function portionLabel(portion) {
           if (portion === "1_4") return "1/4";
           if (portion === "1_2") return "1/2";
           return "1";
         }
 
+        // Muestra un mensaje temporal sobre acciones en el carrito
         function showCartMsg(message, type = "info") {
           if (!cartAlert) return;
           const safeType = ["success", "warning", "danger", "info"].includes(
@@ -324,6 +331,7 @@
         `;
         }
 
+        // Sincroniza el estado del carrito con el campo oculto y localStorage
         function syncHidden() {
           const cartArray = Array.from(cart.values());
           document.getElementById("cart_json").value = JSON.stringify(cartArray);
@@ -331,12 +339,14 @@
           window.PAS.updateCartNavUI();
         }
 
+        // Limpia los elementos visuales del listado del carrito
         function clearRenderedItems() {
           cartList
             .querySelectorAll("li[data-key]")
             .forEach((li) => li.remove());
         }
 
+        // Renderiza el listado del carrito en el HTML
         function renderCart() {
           clearRenderedItems();
 
@@ -382,6 +392,7 @@
           }
         }
 
+        // Añade un nuevo producto al carrito o actualiza la cantidad si ya existe
         function addOrUpdateItem(itemKey, itemData) {
           const existing = cart.get(itemKey);
 
@@ -397,7 +408,7 @@
           showCartMsg("Producto agregado ✅", "success");
         }
 
-        // Agregar Pollo
+        // Evento para agregar Pollo
         addPollo.addEventListener("click", () => {
           const portion = polloPortion.value;
           const qty = Number(polloQty.value || 0);
@@ -408,7 +419,7 @@
           addOrUpdateItem(key, { type: "pollo", portion, qty });
         });
 
-        // Agregar Mostrito
+        // Evento para agregar Mostrito
         addMostrito.addEventListener("click", () => {
           const portion = mostritoPortion.value;
           const qty = Number(mostritoQty.value || 0);
@@ -419,7 +430,7 @@
           addOrUpdateItem(key, { type: "mostrito", portion, qty });
         });
 
-        // Agregar Gaseosa
+        // Evento para agregar Gaseosa
         addSoda.addEventListener("click", () => {
           const brand = sodaBrand.value;
           const size = sodaSize.value;
@@ -436,7 +447,7 @@
           addOrUpdateItem(key, { type: "gaseosa", brand, slug, size, qty });
         });
 
-        // Eliminar
+        // Evento delegado para eliminar productos del listado
         cartList.addEventListener("click", (e) => {
           const btn = e.target.closest("button[data-action='remove']");
           if (!btn) return;
@@ -449,37 +460,51 @@
           showCartMsg("Producto eliminado 🗑️", "info");
         });
 
-        // Inicial
+        // Renderizado inicial al cargar la página
         syncHidden();
         renderCart();
       });
     </script>
+
+    <!-- Script para funciones PWA: Service Worker y Estado de Conexión -->
     <script>
 // ==========================================
 // PASO 1: Registrar el Service Worker
+// Permite que la aplicación cargue recursos desde la caché
 // ==========================================
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
     .then(registro => {
       console.log('✅ Service Worker registrado:', registro);
-      document.getElementById('estadoSW').textContent = '✅ Service Worker Activo';
-      document.getElementById('estadoSW').className = 'badge bg-success badge-status';
+      const estadoEl = document.getElementById('estadoSW');
+      if (estadoEl) {
+        estadoEl.textContent = '✅ Service Worker Activo';
+        estadoEl.className = 'badge bg-success badge-status';
+      }
     })
     .catch(error => {
       console.error('❌ Error al registrar SW:', error);
-      document.getElementById('estadoSW').textContent = '❌ Error en Service Worker';
-      document.getElementById('estadoSW').className = 'badge bg-danger badge-status';
+      const estadoEl = document.getElementById('estadoSW');
+      if (estadoEl) {
+        estadoEl.textContent = '❌ Error en Service Worker';
+        estadoEl.className = 'badge bg-danger badge-status';
+      }
     });
 } else {
-  document.getElementById('estadoSW').textContent = '⚠️ No soportado en este navegador';
-  document.getElementById('estadoSW').className = 'badge bg-secondary badge-status';
+  const estadoEl = document.getElementById('estadoSW');
+  if (estadoEl) {
+    estadoEl.textContent = '⚠️ No soportado en este navegador';
+    estadoEl.className = 'badge bg-secondary badge-status';
+  }
 }
 
 // ==========================================
 // PASO 2: Detectar conexión online/offline
+// Muestra una alerta visual sobre el estado del internet
 // ==========================================
 function actualizarConexion() {
   const el = document.getElementById('conexion');
+  if (!el) return;
   if (navigator.onLine) {
     el.className = 'alert alert-success mt-2 mb-0';
     el.innerHTML = '🟢 <strong>Estás ONLINE</strong> — La app funciona con internet';
@@ -494,26 +519,34 @@ window.addEventListener('online', actualizarConexion);
 window.addEventListener('offline', actualizarConexion);
 
 // ==========================================
-// PASO 3: Capturar el evento de instalación
+// PASO 3: Capturar el evento de instalación (PWA)
+// Permite al usuario instalar la web como una aplicación nativa
 // ==========================================
 let eventoInstalacion;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); // Evitar que aparezca automáticamente
+  e.preventDefault(); // Evitar que aparezca el diálogo automático del navegador
   eventoInstalacion = e;
-  document.getElementById('btnInstalar').classList.remove('d-none');
-  document.getElementById('mensajeInstalacion').classList.add('d-none');
+  const btnInstalar = document.getElementById('btnInstalar');
+  const msgInstalar = document.getElementById('mensajeInstalacion');
+  if (btnInstalar) btnInstalar.classList.remove('d-none');
+  if (msgInstalar) msgInstalar.classList.add('d-none');
 });
 
-document.getElementById('btnInstalar').addEventListener('click', () => {
-  eventoInstalacion.prompt(); // Mostrar el diálogo de instalación
-  eventoInstalacion.userChoice.then(resultado => {
-    if (resultado.outcome === 'accepted') {
-      alert('🎉 ¡App instalada con éxito!');
+const btnInstalar = document.getElementById('btnInstalar');
+if (btnInstalar) {
+  btnInstalar.addEventListener('click', () => {
+    if (eventoInstalacion) {
+      eventoInstalacion.prompt(); // Mostrar el diálogo de instalación
+      eventoInstalacion.userChoice.then(resultado => {
+        if (resultado.outcome === 'accepted') {
+          alert('🎉 ¡App instalada con éxito!');
+        }
+        eventoInstalacion = null;
+      });
     }
-    eventoInstalacion = null;
   });
-});
+}
 </script>
   </body>
 </html>

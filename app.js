@@ -6,6 +6,7 @@
 */
 
 (() => {
+  // Claves para el almacenamiento local y de sesión
   const KEYS = {
     USERS: "pas_users",
     AUTH: "pas_auth",
@@ -14,14 +15,17 @@
     CART_DRAFT: "pas_cart_draft",
   };
 
+  // Selector abreviado para elementos del DOM
   const $ = (sel) => document.querySelector(sel);
 
+  // Precios base de los productos
   const PRICES = {
     pollo: { "1_4": 20, "1_2": 40, 1: 75 },
     mostrito: { "1_4": 25, "1_2": 45, 1: 85 },
     gaseosa: { "0.5L": 5, "1L": 8, "1.5L": 12, "2.25L": 15 },
   };
 
+  // Intenta parsear un JSON, si falla devuelve un valor por defecto
   function safeParse(json, fallback) {
     try {
       return JSON.parse(json) ?? fallback;
@@ -30,47 +34,60 @@
     }
   }
 
+  // Obtiene la lista de usuarios desde localStorage
   function getUsers() {
     return safeParse(localStorage.getItem(KEYS.USERS), []);
   }
+  // Guarda la lista de usuarios en localStorage
   function saveUsers(users) {
     localStorage.setItem(KEYS.USERS, JSON.stringify(users));
   }
 
+  // Obtiene los datos de la sesión actual
   function getAuth() {
     return safeParse(localStorage.getItem(KEYS.AUTH), null);
   }
+  // Establece los datos de la sesión actual
   function setAuth(user) {
     localStorage.setItem(KEYS.AUTH, JSON.stringify(user));
   }
+  // Elimina los datos de la sesión (Cerrar sesión)
   function clearAuth() {
     localStorage.removeItem(KEYS.AUTH);
   }
 
+  // Obtiene la lista de pedidos realizados
   function getOrders() {
     return safeParse(localStorage.getItem(KEYS.ORDERS), []);
   }
+  // Guarda la lista de pedidos en localStorage
   function saveOrders(orders) {
     localStorage.setItem(KEYS.ORDERS, JSON.stringify(orders));
   }
 
+  // Obtiene el pedido que se está armando actualmente
   function getCurrentOrder() {
     return safeParse(sessionStorage.getItem(KEYS.CURRENT_ORDER), null);
   }
+  // Guarda el pedido actual en sessionStorage
   function setCurrentOrder(order) {
     sessionStorage.setItem(KEYS.CURRENT_ORDER, JSON.stringify(order));
   }
+  // Elimina el pedido actual
   function clearCurrentOrder() {
     sessionStorage.removeItem(KEYS.CURRENT_ORDER);
   }
 
+  // Obtiene el borrador del carrito desde localStorage
   function getCartDraft() {
     return safeParse(localStorage.getItem(KEYS.CART_DRAFT), []);
   }
+  // Guarda el borrador del carrito en localStorage
   function saveCartDraft(cartEntries) {
     localStorage.setItem(KEYS.CART_DRAFT, JSON.stringify(cartEntries));
   }
 
+  // Actualiza el contador de items en el icono del carrito en la barra de navegación
   function updateCartNavUI() {
     const entries = getCartDraft();
     const count = entries.reduce(
@@ -83,6 +100,7 @@
     }
   }
 
+  // Muestra un resumen del carrito en una ventana de alerta
   function showCartSummary() {
     const entries = getCartDraft();
     if (entries.length === 0) {
@@ -118,10 +136,12 @@
     alert(mensaje);
   }
 
+  // Obtiene el valor de un parámetro de la URL (Query String)
   function qs(name) {
     return new URLSearchParams(window.location.search).get(name);
   }
 
+  // Muestra alertas informativas basadas en los parámetros de la URL
   function showAlert(containerId = "alertBox") {
     const msg = qs("msg");
     const type = qs("type") || "success";
@@ -141,6 +161,7 @@
     `;
   }
 
+  // Escapa caracteres especiales de HTML para prevenir ataques XSS
   function escapeHtml(str) {
     return String(str)
       .replaceAll("&", "&amp;")
@@ -150,6 +171,7 @@
       .replaceAll("'", "&#039;");
   }
 
+  // Actualiza la interfaz del encabezado según el estado de autenticación y rol del usuario
   function updateHeaderAuthUI() {
     const auth = getAuth();
     const btnAuth = document.getElementById("btnAuth");
@@ -217,6 +239,7 @@
     }
   }
 
+  // Verifica si el usuario actual tiene uno de los roles permitidos
   function requireRole(allowedRoles) {
     const auth = getAuth();
     if (!auth || !allowedRoles.includes(auth.cargo)) {
@@ -236,11 +259,12 @@
   }
 
   // ====== Stock (se calcula desde pedidos PAGADOS) ======
-  const DAILY_CHICKENS = 200;
-  const SODAS = ["Coca Cola", "Inka Kola", "Fanta", "Sprite", "Cola Escocesa"];
-  const SIZES = ["0.5L", "1L", "1.5L", "2.25L"];
-  const DAILY_SODA_PER_SIZE = 30; // por gaseosa y por tamaño
+  const DAILY_CHICKENS = 200; // Stock inicial de pollos
+  const SODAS = ["Coca Cola", "Inka Kola", "Fanta", "Sprite", "Cola Escocesa"]; // Marcas disponibles
+  const SIZES = ["0.5L", "1L", "1.5L", "2.25L"]; // Tamaños disponibles
+  const DAILY_SODA_PER_SIZE = 30; // Stock inicial por gaseosa y por tamaño
 
+  // Calcula el stock restante basado en los pedidos pagados
   function calcStockFromOrders(orders) {
     // Solo pedidos pagados
     const paid = orders.filter((o) => o?.status?.paid);
@@ -302,6 +326,7 @@
   }
 
   // ====== Helpers para Pedido ======
+  // Genera un ID de pedido único basado en la fecha y un valor aleatorio
   function makeOrderId() {
     const now = new Date();
     const pad = (n) => String(n).padStart(2, "0");
@@ -316,6 +341,7 @@
     return `ORD-${stamp}-${rnd}`;
   }
 
+  // Construye el objeto de pedido a partir de los datos del formulario (o del carrito JSON)
   function buildOrderFromForm() {
     const cartJsonEl = $("#cart_json");
     if (cartJsonEl) {
@@ -401,6 +427,7 @@
     };
   }
 
+  // Renderiza los detalles de un pedido en un contenedor específico
   function renderOrderDetails(order, containerId = "orderDetails") {
     const el = document.getElementById(containerId);
     if (!el) return;
@@ -440,6 +467,8 @@
   }
 
   // ====== Páginas ======
+
+  // Lógica para la página de Login
   function pageLogin() {
     updateHeaderAuthUI();
     showAlert("alertBox");
@@ -485,6 +514,7 @@
     });
   }
 
+  // Lógica para la página de Registro
   function pageRegister() {
     updateHeaderAuthUI();
     showAlert("alertBox");
@@ -529,6 +559,7 @@
     });
   }
 
+  // Lógica para la página de Nuevo Pedido
   function pageNewOrder() {
     updateHeaderAuthUI();
     showAlert("alertBox");
@@ -565,6 +596,7 @@
     });
   }
 
+  // Lógica para la página de Resumen de Pedido
   function pageOrderSummary() {
     updateHeaderAuthUI();
     showAlert("alertBox");
@@ -659,6 +691,7 @@
     });
   }
 
+  // Lógica para la página de Stock
   function pageStock() {
     if (!requireRole(["administrador", "cocinero"])) return;
     updateHeaderAuthUI();
@@ -760,6 +793,7 @@
     );
   }
 
+  // Lógica para la página de Reportes
   function pageReportes() {
     if (!requireRole(["administrador"])) return;
     updateHeaderAuthUI();
@@ -794,6 +828,7 @@
     });
   }
 
+  // Renderiza el informe de ventas basado en los pedidos filtrados
   function renderReport(orders) {
     const results = $("#reportResults");
     if (!results) return;
@@ -900,6 +935,7 @@
     `;
   }
 
+  // Lógica para la página de Administración de Pedidos (Cocinero/Admin)
   function pageAdminPedidos() {
     if (!requireRole(["administrador", "cocinero"])) return;
     updateHeaderAuthUI();
@@ -976,6 +1012,7 @@
 
     wrap.innerHTML = cards;
 
+    // Maneja el clic para marcar un pedido como cocinado o pendiente
     wrap.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action='toggleCooked']");
       if (!btn) return;
@@ -999,10 +1036,12 @@
   }
 
   // ====== Router por atributo data-page ======
+  // Ejecuta la lógica correspondiente según la página cargada
   document.addEventListener("DOMContentLoaded", () => {
     updateHeaderAuthUI();
     updateCartNavUI();
 
+    // Maneja el clic global en el botón "Ver Carrito"
     document.addEventListener("click", (e) => {
       if (e.target.closest("#btnVerCarrito")) {
         e.preventDefault();
@@ -1011,7 +1050,8 @@
           setCurrentOrder(order);
           window.location.href = "order-summary.html";
         } catch (err) {
-          fail(err.message || "Error al crear el pedido.");
+          // Si hay un error al construir el pedido (ej. carrito vacío), se muestra un resumen simple
+          showCartSummary();
         }
       }
     });
@@ -1028,7 +1068,7 @@
     if (page === "reportes") pageReportes();
   });
 
-  // Exponer algunas cosas si quieres usarlas luego
+  // Exponer algunas cosas globalmente bajo el espacio de nombres PAS
   window.PAS = {
     requireRole,
     getAuth,
